@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ChevronDown, Box, Server, Network, Database, Shield, Settings } from "lucide-react";
+import { ChevronDown, Box, Server, Network, Database, Shield, Settings, Play, Pause, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const containerConcepts = [
@@ -49,6 +49,15 @@ const k8sArchitecture = [
 
 export const KubernetesFundamentals = () => {
   const [openSections, setOpenSections] = useState<string[]>([]);
+  const [demoState, setDemoState] = useState<'idle' | 'running' | 'completed'>('idle');
+  const [currentStep, setCurrentStep] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  const demoSteps = [
+    { name: 'Build', description: 'Creating container image...', icon: '🔨' },
+    { name: 'Run', description: 'Starting container...', icon: '▶️' },
+    { name: 'Deploy', description: 'Deploying to cluster...', icon: '🚀' }
+  ];
 
   const toggleSection = (section: string) => {
     setOpenSections(prev => 
@@ -57,6 +66,38 @@ export const KubernetesFundamentals = () => {
         : [...prev, section]
     );
   };
+
+  const startDemo = () => {
+    if (demoState === 'running') return;
+    
+    setDemoState('running');
+    setCurrentStep(0);
+    setIsAnimating(true);
+  };
+
+  const resetDemo = () => {
+    setDemoState('idle');
+    setCurrentStep(0);
+    setIsAnimating(false);
+  };
+
+  useEffect(() => {
+    if (demoState === 'running' && isAnimating) {
+      const timer = setInterval(() => {
+        setCurrentStep(prev => {
+          if (prev < demoSteps.length - 1) {
+            return prev + 1;
+          } else {
+            setDemoState('completed');
+            setIsAnimating(false);
+            return prev;
+          }
+        });
+      }, 2000);
+
+      return () => clearInterval(timer);
+    }
+  }, [demoState, isAnimating, demoSteps.length]);
 
   return (
     <section className="py-24 relative">
@@ -121,30 +162,79 @@ export const KubernetesFundamentals = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="terminal p-6 rounded-lg border border-border/30">
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-2 mb-4">
-                        <div className="w-2 h-2 bg-tech-green rounded-full animate-pulse" />
-                        <span className="font-mono text-xs text-muted-foreground">
-                          Container Lifecycle Simulation
-                        </span>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-2 h-2 rounded-full ${demoState === 'running' ? 'bg-tech-green animate-pulse' : demoState === 'completed' ? 'bg-primary' : 'bg-muted-foreground'}`} />
+                          <span className="font-mono text-xs text-muted-foreground">
+                            Container Lifecycle Simulation
+                          </span>
+                        </div>
+                        {demoState !== 'idle' && (
+                          <span className="text-xs text-muted-foreground font-mono">
+                            {demoState === 'running' ? `Step ${currentStep + 1}/${demoSteps.length}` : 'Completed'}
+                          </span>
+                        )}
                       </div>
+                      
+                      {demoState !== 'idle' && (
+                        <div className="mb-4 p-3 bg-muted/30 rounded border">
+                          <div className="flex items-center gap-2">
+                            <span className="text-lg">{demoSteps[currentStep]?.icon}</span>
+                            <span className="text-sm font-medium">{demoSteps[currentStep]?.description}</span>
+                          </div>
+                        </div>
+                      )}
+
                       <div className="grid grid-cols-3 gap-2">
-                        <div className="p-3 bg-primary/10 rounded border text-center">
-                          <div className="w-4 h-4 bg-primary rounded mx-auto mb-1" />
-                          <span className="text-xs">Build</span>
-                        </div>
-                        <div className="p-3 bg-accent/10 rounded border text-center">
-                          <div className="w-4 h-4 bg-accent rounded mx-auto mb-1" />
-                          <span className="text-xs">Run</span>
-                        </div>
-                        <div className="p-3 bg-tech-green/10 rounded border text-center">
-                          <div className="w-4 h-4 bg-tech-green rounded mx-auto mb-1" />
-                          <span className="text-xs">Deploy</span>
-                        </div>
+                        {demoSteps.map((step, index) => (
+                          <div 
+                            key={index}
+                            className={`p-3 rounded border text-center transition-all duration-500 ${
+                              demoState === 'running' && index === currentStep 
+                                ? 'bg-primary/20 border-primary scale-105 shadow-lg' 
+                                : demoState === 'completed' || (demoState === 'running' && index < currentStep)
+                                ? 'bg-tech-green/20 border-tech-green'
+                                : index === 0 ? 'bg-primary/10 border-primary/30' 
+                                : index === 1 ? 'bg-accent/10 border-accent/30'
+                                : 'bg-tech-green/10 border-tech-green/30'
+                            }`}
+                          >
+                            <div className={`w-4 h-4 rounded mx-auto mb-1 transition-all duration-300 ${
+                              demoState === 'running' && index === currentStep
+                                ? 'bg-primary animate-pulse'
+                                : demoState === 'completed' || (demoState === 'running' && index < currentStep)
+                                ? 'bg-tech-green'
+                                : index === 0 ? 'bg-primary/50'
+                                : index === 1 ? 'bg-accent/50'
+                                : 'bg-tech-green/50'
+                            }`} />
+                            <span className="text-xs font-medium">{step.name}</span>
+                          </div>
+                        ))}
                       </div>
-                      <Button variant="outline" className="w-full mt-4">
-                        Start Interactive Demo
-                      </Button>
+                      
+                      <div className="flex gap-2 mt-4">
+                        <Button 
+                          variant="outline" 
+                          className="flex-1"
+                          onClick={startDemo}
+                          disabled={demoState === 'running'}
+                        >
+                          <Play className="w-4 h-4 mr-2" />
+                          {demoState === 'idle' ? 'Start Demo' : demoState === 'running' ? 'Running...' : 'Demo Complete'}
+                        </Button>
+                        
+                        {demoState !== 'idle' && (
+                          <Button 
+                            variant="outline" 
+                            size="icon"
+                            onClick={resetDemo}
+                          >
+                            <RotateCcw className="w-4 h-4" />
+                          </Button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </CardContent>
