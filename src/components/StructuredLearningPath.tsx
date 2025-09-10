@@ -1100,58 +1100,666 @@ export const StructuredLearningPath = () => {
                 </CardHeader>
 
                 <CardContent className="space-y-8">
-                  <Tabs defaultValue="overview" className="w-full">
-                    <TabsList className="grid w-full grid-cols-3 h-12 mb-6">
-                      <TabsTrigger value="overview">Topic Overview</TabsTrigger>
-                      <TabsTrigger value="interactive">Interactive Labs</TabsTrigger>
-                      <TabsTrigger value="scenarios">Real-world Scenarios</TabsTrigger>
+                  <Tabs defaultValue="containers" className="w-full">
+                    <TabsList className="grid w-full grid-cols-4 h-12 mb-6">
+                      <TabsTrigger value="containers">Containers</TabsTrigger>
+                      <TabsTrigger value="architecture">Architecture</TabsTrigger>
+                      <TabsTrigger value="core-objects">Core Objects</TabsTrigger>
+                      <TabsTrigger value="workloads">Workloads</TabsTrigger>
                     </TabsList>
 
-                    {/* Overview Tab */}
-                    <TabsContent value="overview" className="space-y-6">
-                      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {advancedTopics.map((topic) => (
-                          <Card 
-                            key={topic.id} 
-                            className={`group card-gradient border-border/50 hover-lift cursor-pointer transition-all ${
-                              activeAdvancedTopics.includes(topic.id) ? 'ring-2 ring-primary/50' : ''
-                            }`}
-                            onClick={() => toggleAdvancedTopic(topic.id)}
-                          >
-                            <CardHeader className="pb-4">
-                              <div className="flex items-start justify-between">
-                                <div className={`p-3 rounded-xl bg-gradient-to-r ${topic.color} shadow-glow`}>
-                                  <topic.icon className="w-6 h-6 text-white" />
-                                </div>
-                                <Badge className={difficultyColors[topic.difficulty as keyof typeof difficultyColors]}>
-                                  {topic.difficulty}
-                                </Badge>
+                    {/* Containers Tab */}
+                    <TabsContent value="containers" className="space-y-6">
+                      <div className="grid md:grid-cols-2 gap-6">
+                        <Card className="card-gradient border-border/50 hover-lift cursor-pointer">
+                          <CardContent className="p-6">
+                            <div className="flex items-start justify-between mb-4">
+                              <div className="p-3 bg-gradient-to-r from-primary to-accent rounded-xl">
+                                <Package className="w-6 h-6 text-white" />
                               </div>
-                              <CardTitle className="group-hover:gradient-text transition-all">
-                                {topic.title}
-                              </CardTitle>
-                              <p className="text-sm text-muted-foreground">
-                                {topic.description}
-                              </p>
-                            </CardHeader>
-                            <CardContent>
-                              {activeAdvancedTopics.includes(topic.id) && (
-                                <div className="space-y-2 animate-fade-in">
-                                  <h4 className="font-medium text-sm mb-3">What you'll learn:</h4>
-                                  {topic.subtopics.map((subtopic, index) => (
-                                    <div key={index} className="flex items-center gap-2 text-sm">
-                                      <div className="w-1.5 h-1.5 bg-primary rounded-full" />
-                                      <span className="text-muted-foreground">{subtopic}</span>
+                            </div>
+                            <h3 className="text-lg font-semibold mb-2">Container Basics</h3>
+                            <p className="text-sm text-muted-foreground mb-4">
+                              Understanding containerization and its benefits
+                            </p>
+                            <Button variant="outline" className="w-full">Learn More</Button>
+                          </CardContent>
+                        </Card>
+
+                        <Card className="card-gradient border-border/50 hover-lift cursor-pointer">
+                          <CardContent className="p-6">
+                            <div className="flex items-start justify-between mb-4">
+                              <div className="p-3 bg-gradient-to-r from-accent to-cyber-purple rounded-xl">
+                                <Layers className="w-6 h-6 text-white" />
+                              </div>
+                            </div>
+                            <h3 className="text-lg font-semibold mb-2">Docker Images</h3>
+                            <p className="text-sm text-muted-foreground mb-4">
+                              Building and managing container images
+                            </p>
+                            <Button variant="outline" className="w-full">Learn More</Button>
+                          </CardContent>
+                        </Card>
+                      </div>
+                    </TabsContent>
+
+                    {/* Architecture Tab */}
+                    <TabsContent value="architecture" className="space-y-6">
+                      <div className="grid md:grid-cols-2 gap-6">
+                        <Card className="card-gradient border-border/50 hover-lift cursor-pointer">
+                          <CardContent className="p-6">
+                            <div className="flex items-start justify-between mb-4">
+                              <div className="p-3 bg-gradient-to-r from-tech-green to-primary rounded-xl">
+                                <Network className="w-6 h-6 text-white" />
+                              </div>
+                            </div>
+                            <h3 className="text-lg font-semibold mb-2">Cluster Architecture</h3>
+                            <p className="text-sm text-muted-foreground mb-4">
+                              Master and worker node components
+                            </p>
+                            <Button variant="outline" className="w-full">Learn More</Button>
+                          </CardContent>
+                        </Card>
+
+                        <Card className="card-gradient border-border/50 hover-lift cursor-pointer">
+                          <CardContent className="p-6">
+                            <div className="flex items-start justify-between mb-4">
+                              <div className="p-3 bg-gradient-to-r from-cyber-purple to-accent rounded-xl">
+                                <Globe className="w-6 h-6 text-white" />
+                              </div>
+                            </div>
+                            <h3 className="text-lg font-semibold mb-2">Networking</h3>
+                            <p className="text-sm text-muted-foreground mb-4">
+                              Pod-to-pod and service networking
+                            </p>
+                            <Button variant="outline" className="w-full">Learn More</Button>
+                          </CardContent>
+                        </Card>
+                      </div>
+                    </TabsContent>
+
+                    {/* Core Objects Tab */}
+                    <TabsContent value="core-objects" className="space-y-6">
+                      <div className="grid md:grid-cols-2 gap-6">
+                        <Card className="card-gradient border-border/50 hover-lift cursor-pointer">
+                          <CardContent className="p-6">
+                            <div className="flex items-start justify-between mb-4">
+                              <div className="p-3 bg-gradient-to-r from-primary to-electric-blue rounded-xl">
+                                <Package className="w-6 h-6 text-white" />
+                              </div>
+                            </div>
+                            <h3 className="text-lg font-semibold mb-2">Pods</h3>
+                            <p className="text-sm text-muted-foreground mb-4">
+                              Smallest deployable units in Kubernetes
+                            </p>
+                            <Button variant="outline" className="w-full">Learn More</Button>
+                          </CardContent>
+                        </Card>
+
+                        <Card className="card-gradient border-border/50 hover-lift cursor-pointer">
+                          <CardContent className="p-6">
+                            <div className="flex items-start justify-between mb-4">
+                              <div className="p-3 bg-gradient-to-r from-accent to-primary rounded-xl">
+                                <Network className="w-6 h-6 text-white" />
+                              </div>
+                            </div>
+                            <h3 className="text-lg font-semibold mb-2">Services</h3>
+                            <p className="text-sm text-muted-foreground mb-4">
+                              Exposing applications and load balancing
+                            </p>
+                            <Button variant="outline" className="w-full">Learn More</Button>
+                          </CardContent>
+                        </Card>
+                      </div>
+                    </TabsContent>
+
+                    {/* Workloads Tab */}
+                    <TabsContent value="workloads" className="space-y-6">
+                      <div className="grid md:grid-cols-2 gap-6">
+                        {/* StatefulSets */}
+                        <Card className="card-gradient border-border/50 hover-lift cursor-pointer">
+                          <CardContent className="p-6">
+                            <div className="flex items-start justify-between mb-4">
+                              <div className="p-3 bg-gradient-to-r from-primary to-electric-blue rounded-xl">
+                                <Database className="w-6 h-6 text-white" />
+                              </div>
+                            </div>
+                            <h3 className="text-lg font-semibold mb-2">StatefulSets</h3>
+                            <p className="text-sm text-muted-foreground mb-4">
+                              Stateful applications with stable network identity
+                            </p>
+                            <Dialog>
+                              <DialogTrigger asChild>
+                                <Button variant="outline" className="w-full">Learn More</Button>
+                              </DialogTrigger>
+                              <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+                                <DialogHeader>
+                                  <DialogTitle className="text-2xl flex items-center gap-3">
+                                    <Database className="w-6 h-6 text-primary" />
+                                    StatefulSets - Managing Stateful Applications
+                                  </DialogTitle>
+                                </DialogHeader>
+                                <div className="space-y-6">
+                                  <div className="grid md:grid-cols-2 gap-6">
+                                    <div>
+                                      <h4 className="font-semibold mb-3">Overview</h4>
+                                      <p className="text-sm text-muted-foreground mb-4">
+                                        StatefulSets are the workload API object used to manage stateful applications. They provide guarantees about the ordering and uniqueness of Pods, making them ideal for databases, key-value stores, and other stateful services.
+                                      </p>
+                                      
+                                      <h4 className="font-semibold mb-3">Key Features</h4>
+                                      <ul className="space-y-2 text-sm text-muted-foreground">
+                                        <li className="flex items-center gap-2">
+                                          <CheckCircle className="w-4 h-4 text-tech-green" />
+                                          Stable, unique network identifiers
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                          <CheckCircle className="w-4 h-4 text-tech-green" />
+                                          Stable, persistent storage
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                          <CheckCircle className="w-4 h-4 text-tech-green" />
+                                          Ordered, graceful deployment and scaling
+                                        </li>
+                                      </ul>
                                     </div>
-                                  ))}
-                                  <Button variant="outline" size="sm" className="w-full mt-4">
-                                    Start Learning
-                                  </Button>
+                                    
+                                    <div>
+                                      <h4 className="font-semibold mb-3">Common Use Cases</h4>
+                                      <ul className="space-y-2 text-sm text-muted-foreground">
+                                        <li className="flex items-center gap-2">
+                                          <div className="w-2 h-2 bg-primary rounded-full" />
+                                          Databases (PostgreSQL, MySQL, MongoDB)
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                          <div className="w-2 h-2 bg-primary rounded-full" />
+                                          Message queues (Kafka, RabbitMQ)
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                          <div className="w-2 h-2 bg-primary rounded-full" />
+                                          Distributed systems (Elasticsearch, Cassandra)
+                                        </li>
+                                      </ul>
+                                    </div>
+                                  </div>
+                                  
+                                  <div className="space-y-4">
+                                    <h4 className="font-semibold">Example StatefulSet YAML</h4>
+                                    <div className="bg-muted/50 p-4 rounded-lg border border-border/30 overflow-x-auto">
+                                      <pre className="text-sm"><code>{`apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql
+spec:
+  serviceName: mysql
+  replicas: 3
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: mysql:8.0
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: password
+        ports:
+        - containerPort: 3306
+        volumeMounts:
+        - name: mysql-storage
+          mountPath: /var/lib/mysql
+  volumeClaimTemplates:
+  - metadata:
+      name: mysql-storage
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 10Gi`}</code></pre>
+                                    </div>
+                                  </div>
+
+                                  <div className="space-y-4">
+                                    <h4 className="font-semibold">Common Commands</h4>
+                                    <div className="grid gap-3">
+                                      {[
+                                        { cmd: "kubectl create statefulset mysql --image=mysql:8.0", desc: "Create a StatefulSet" },
+                                        { cmd: "kubectl get statefulsets", desc: "List all StatefulSets" },
+                                        { cmd: "kubectl scale statefulset mysql --replicas=5", desc: "Scale StatefulSet" },
+                                        { cmd: "kubectl delete statefulset mysql", desc: "Delete StatefulSet" }
+                                      ].map((command, index) => (
+                                        <div key={index} className="flex items-center justify-between p-3 bg-muted/30 rounded border">
+                                          <div>
+                                            <code className="text-sm font-mono text-primary">{command.cmd}</code>
+                                            <p className="text-xs text-muted-foreground mt-1">{command.desc}</p>
+                                          </div>
+                                          <Button variant="ghost" size="sm" onClick={() => copyCommand(command.cmd)}>
+                                            <Copy className="w-4 h-4" />
+                                          </Button>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
                                 </div>
-                              )}
-                            </CardContent>
-                          </Card>
-                        ))}
+                              </DialogContent>
+                            </Dialog>
+                          </CardContent>
+                        </Card>
+
+                        {/* DaemonSets */}
+                        <Card className="card-gradient border-border/50 hover-lift cursor-pointer">
+                          <CardContent className="p-6">
+                            <div className="flex items-start justify-between mb-4">
+                              <div className="p-3 bg-gradient-to-r from-accent to-cyber-purple rounded-xl">
+                                <Monitor className="w-6 h-6 text-white" />
+                              </div>
+                            </div>
+                            <h3 className="text-lg font-semibold mb-2">DaemonSets</h3>
+                            <p className="text-sm text-muted-foreground mb-4">
+                              Pods running on every node
+                            </p>
+                            <Dialog>
+                              <DialogTrigger asChild>
+                                <Button variant="outline" className="w-full">Learn More</Button>
+                              </DialogTrigger>
+                              <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+                                <DialogHeader>
+                                  <DialogTitle className="text-2xl flex items-center gap-3">
+                                    <Monitor className="w-6 h-6 text-primary" />
+                                    DaemonSets - Node-Level Services
+                                  </DialogTitle>
+                                </DialogHeader>
+                                <div className="space-y-6">
+                                  <div className="grid md:grid-cols-2 gap-6">
+                                    <div>
+                                      <h4 className="font-semibold mb-3">Overview</h4>
+                                      <p className="text-sm text-muted-foreground mb-4">
+                                        A DaemonSet ensures that all (or some) Nodes run a copy of a Pod. As nodes are added to the cluster, Pods are added to them. As nodes are removed from the cluster, those Pods are garbage collected.
+                                      </p>
+                                      
+                                      <h4 className="font-semibold mb-3">Key Features</h4>
+                                      <ul className="space-y-2 text-sm text-muted-foreground">
+                                        <li className="flex items-center gap-2">
+                                          <CheckCircle className="w-4 h-4 text-tech-green" />
+                                          Runs one pod per node
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                          <CheckCircle className="w-4 h-4 text-tech-green" />
+                                          Automatically scales with cluster
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                          <CheckCircle className="w-4 h-4 text-tech-green" />
+                                          Node-level resource management
+                                        </li>
+                                      </ul>
+                                    </div>
+                                    
+                                    <div>
+                                      <h4 className="font-semibold mb-3">Common Use Cases</h4>
+                                      <ul className="space-y-2 text-sm text-muted-foreground">
+                                        <li className="flex items-center gap-2">
+                                          <div className="w-2 h-2 bg-primary rounded-full" />
+                                          Log collection (Fluentd, Logstash)
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                          <div className="w-2 h-2 bg-primary rounded-full" />
+                                          Node monitoring (Prometheus Node Exporter)
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                          <div className="w-2 h-2 bg-primary rounded-full" />
+                                          Network plugins (Calico, Flannel)
+                                        </li>
+                                      </ul>
+                                    </div>
+                                  </div>
+                                  
+                                  <div className="space-y-4">
+                                    <h4 className="font-semibold">Example DaemonSet YAML</h4>
+                                    <div className="bg-muted/50 p-4 rounded-lg border border-border/30 overflow-x-auto">
+                                      <pre className="text-sm"><code>{`apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: node-exporter
+  labels:
+    app: node-exporter
+spec:
+  selector:
+    matchLabels:
+      app: node-exporter
+  template:
+    metadata:
+      labels:
+        app: node-exporter
+    spec:
+      hostNetwork: true
+      hostPID: true
+      containers:
+      - name: node-exporter
+        image: prom/node-exporter:latest
+        ports:
+        - containerPort: 9100
+          hostPort: 9100
+        volumeMounts:
+        - name: proc
+          mountPath: /host/proc
+          readOnly: true
+        - name: sys
+          mountPath: /host/sys
+          readOnly: true
+      volumes:
+      - name: proc
+        hostPath:
+          path: /proc
+      - name: sys
+        hostPath:
+          path: /sys`}</code></pre>
+                                    </div>
+                                  </div>
+
+                                  <div className="space-y-4">
+                                    <h4 className="font-semibold">Common Commands</h4>
+                                    <div className="grid gap-3">
+                                      {[
+                                        { cmd: "kubectl get daemonsets", desc: "List all DaemonSets" },
+                                        { cmd: "kubectl describe daemonset node-exporter", desc: "Describe DaemonSet" },
+                                        { cmd: "kubectl delete daemonset node-exporter", desc: "Delete DaemonSet" },
+                                        { cmd: "kubectl rollout status daemonset/node-exporter", desc: "Check rollout status" }
+                                      ].map((command, index) => (
+                                        <div key={index} className="flex items-center justify-between p-3 bg-muted/30 rounded border">
+                                          <div>
+                                            <code className="text-sm font-mono text-primary">{command.cmd}</code>
+                                            <p className="text-xs text-muted-foreground mt-1">{command.desc}</p>
+                                          </div>
+                                          <Button variant="ghost" size="sm" onClick={() => copyCommand(command.cmd)}>
+                                            <Copy className="w-4 h-4" />
+                                          </Button>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                </div>
+                              </DialogContent>
+                            </Dialog>
+                          </CardContent>
+                        </Card>
+
+                        {/* Jobs & CronJobs */}
+                        <Card className="card-gradient border-border/50 hover-lift cursor-pointer">
+                          <CardContent className="p-6">
+                            <div className="flex items-start justify-between mb-4">
+                              <div className="p-3 bg-gradient-to-r from-tech-green to-primary rounded-xl">
+                                <Settings className="w-6 h-6 text-white" />
+                              </div>
+                            </div>
+                            <h3 className="text-lg font-semibold mb-2">Jobs & CronJobs</h3>
+                            <p className="text-sm text-muted-foreground mb-4">
+                              Batch and scheduled workloads
+                            </p>
+                            <Dialog>
+                              <DialogTrigger asChild>
+                                <Button variant="outline" className="w-full">Learn More</Button>
+                              </DialogTrigger>
+                              <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+                                <DialogHeader>
+                                  <DialogTitle className="text-2xl flex items-center gap-3">
+                                    <Settings className="w-6 h-6 text-primary" />
+                                    Jobs & CronJobs - Batch Processing
+                                  </DialogTitle>
+                                </DialogHeader>
+                                <div className="space-y-6">
+                                  <div className="grid md:grid-cols-2 gap-6">
+                                    <div>
+                                      <h4 className="font-semibold mb-3">Jobs Overview</h4>
+                                      <p className="text-sm text-muted-foreground mb-4">
+                                        A Job creates one or more Pods and will continue to retry execution of the Pods until a specified number of them successfully terminate. Jobs are useful for batch processing, data migration, and one-time tasks.
+                                      </p>
+                                      
+                                      <h4 className="font-semibold mb-3">Job Features</h4>
+                                      <ul className="space-y-2 text-sm text-muted-foreground">
+                                        <li className="flex items-center gap-2">
+                                          <CheckCircle className="w-4 h-4 text-tech-green" />
+                                          Run to completion
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                          <CheckCircle className="w-4 h-4 text-tech-green" />
+                                          Retry on failure
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                          <CheckCircle className="w-4 h-4 text-tech-green" />
+                                          Parallel execution
+                                        </li>
+                                      </ul>
+                                    </div>
+                                    
+                                    <div>
+                                      <h4 className="font-semibold mb-3">CronJobs Overview</h4>
+                                      <p className="text-sm text-muted-foreground mb-4">
+                                        CronJobs create Jobs on a repeating schedule. They are useful for periodic tasks like backups, report generation, and cleanup operations.
+                                      </p>
+                                      
+                                      <h4 className="font-semibold mb-3">CronJob Features</h4>
+                                      <ul className="space-y-2 text-sm text-muted-foreground">
+                                        <li className="flex items-center gap-2">
+                                          <CheckCircle className="w-4 h-4 text-tech-green" />
+                                          Cron syntax scheduling
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                          <CheckCircle className="w-4 h-4 text-tech-green" />
+                                          Missed job handling
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                          <CheckCircle className="w-4 h-4 text-tech-green" />
+                                          Job history limits
+                                        </li>
+                                      </ul>
+                                    </div>
+                                  </div>
+                                  
+                                  <div className="space-y-4">
+                                    <h4 className="font-semibold">Example Job YAML</h4>
+                                    <div className="bg-muted/50 p-4 rounded-lg border border-border/30 overflow-x-auto">
+                                      <pre className="text-sm"><code>{`apiVersion: batch/v1
+kind: Job
+metadata:
+  name: data-migration
+spec:
+  completions: 1
+  parallelism: 1
+  backoffLimit: 3
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: migration
+        image: postgres:13
+        command: ["psql"]
+        args: ["-h", "postgres-service", "-d", "mydb", "-c", "COPY data TO '/backup/data.csv'"]
+        env:
+        - name: PGPASSWORD
+          value: "password"`}</code></pre>
+                                    </div>
+                                  </div>
+
+                                  <div className="space-y-4">
+                                    <h4 className="font-semibold">Example CronJob YAML</h4>
+                                    <div className="bg-muted/50 p-4 rounded-lg border border-border/30 overflow-x-auto">
+                                      <pre className="text-sm"><code>{`apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: backup-job
+spec:
+  schedule: "0 2 * * *"  # Daily at 2 AM
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: backup
+            image: postgres:13
+            command: ["pg_dump"]
+            args: ["-h", "postgres-service", "-U", "postgres", "mydb", ">", "/backup/backup.sql"]`}</code></pre>
+                                    </div>
+                                  </div>
+
+                                  <div className="space-y-4">
+                                    <h4 className="font-semibold">Common Commands</h4>
+                                    <div className="grid gap-3">
+                                      {[
+                                        { cmd: "kubectl create job backup --image=postgres:13", desc: "Create a Job" },
+                                        { cmd: "kubectl get jobs", desc: "List all Jobs" },
+                                        { cmd: "kubectl get cronjobs", desc: "List all CronJobs" },
+                                        { cmd: "kubectl delete job backup", desc: "Delete Job" }
+                                      ].map((command, index) => (
+                                        <div key={index} className="flex items-center justify-between p-3 bg-muted/30 rounded border">
+                                          <div>
+                                            <code className="text-sm font-mono text-primary">{command.cmd}</code>
+                                            <p className="text-xs text-muted-foreground mt-1">{command.desc}</p>
+                                          </div>
+                                          <Button variant="ghost" size="sm" onClick={() => copyCommand(command.cmd)}>
+                                            <Copy className="w-4 h-4" />
+                                          </Button>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                </div>
+                              </DialogContent>
+                            </Dialog>
+                          </CardContent>
+                        </Card>
+
+                        {/* ReplicaSets */}
+                        <Card className="card-gradient border-border/50 hover-lift cursor-pointer">
+                          <CardContent className="p-6">
+                            <div className="flex items-start justify-between mb-4">
+                              <div className="p-3 bg-gradient-to-r from-cyber-purple to-accent rounded-xl">
+                                <Package className="w-6 h-6 text-white" />
+                              </div>
+                            </div>
+                            <h3 className="text-lg font-semibold mb-2">ReplicaSets</h3>
+                            <p className="text-sm text-muted-foreground mb-4">
+                              Maintaining desired pod replicas
+                            </p>
+                            <Dialog>
+                              <DialogTrigger asChild>
+                                <Button variant="outline" className="w-full">Learn More</Button>
+                              </DialogTrigger>
+                              <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+                                <DialogHeader>
+                                  <DialogTitle className="text-2xl flex items-center gap-3">
+                                    <Package className="w-6 h-6 text-primary" />
+                                    ReplicaSets - Pod Replication Controller
+                                  </DialogTitle>
+                                </DialogHeader>
+                                <div className="space-y-6">
+                                  <div className="grid md:grid-cols-2 gap-6">
+                                    <div>
+                                      <h4 className="font-semibold mb-3">Overview</h4>
+                                      <p className="text-sm text-muted-foreground mb-4">
+                                        A ReplicaSet's purpose is to maintain a stable set of replica Pods running at any given time. It's often used to guarantee the availability of a specified number of identical Pods. Usually managed by Deployments.
+                                      </p>
+                                      
+                                      <h4 className="font-semibold mb-3">Key Features</h4>
+                                      <ul className="space-y-2 text-sm text-muted-foreground">
+                                        <li className="flex items-center gap-2">
+                                          <CheckCircle className="w-4 h-4 text-tech-green" />
+                                          Maintains desired replica count
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                          <CheckCircle className="w-4 h-4 text-tech-green" />
+                                          Self-healing capabilities
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                          <CheckCircle className="w-4 h-4 text-tech-green" />
+                                          Pod template management
+                                        </li>
+                                      </ul>
+                                    </div>
+                                    
+                                    <div>
+                                      <h4 className="font-semibold mb-3">Common Use Cases</h4>
+                                      <ul className="space-y-2 text-sm text-muted-foreground">
+                                        <li className="flex items-center gap-2">
+                                          <div className="w-2 h-2 bg-primary rounded-full" />
+                                          High availability applications
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                          <div className="w-2 h-2 bg-primary rounded-full" />
+                                          Load distribution
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                          <div className="w-2 h-2 bg-primary rounded-full" />
+                                          Rolling updates (via Deployments)
+                                        </li>
+                                      </ul>
+                                    </div>
+                                  </div>
+                                  
+                                  <div className="space-y-4">
+                                    <h4 className="font-semibold">Example ReplicaSet YAML</h4>
+                                    <div className="bg-muted/50 p-4 rounded-lg border border-border/30 overflow-x-auto">
+                                      <pre className="text-sm"><code>{`apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: nginx-replicaset
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.20
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"`}</code></pre>
+                                    </div>
+                                  </div>
+
+                                  <div className="space-y-4">
+                                    <h4 className="font-semibold">Common Commands</h4>
+                                    <div className="grid gap-3">
+                                      {[
+                                        { cmd: "kubectl get replicasets", desc: "List all ReplicaSets" },
+                                        { cmd: "kubectl describe rs nginx-replicaset", desc: "Describe ReplicaSet" },
+                                        { cmd: "kubectl scale rs nginx-replicaset --replicas=5", desc: "Scale ReplicaSet" },
+                                        { cmd: "kubectl delete rs nginx-replicaset", desc: "Delete ReplicaSet" }
+                                      ].map((command, index) => (
+                                        <div key={index} className="flex items-center justify-between p-3 bg-muted/30 rounded border">
+                                          <div>
+                                            <code className="text-sm font-mono text-primary">{command.cmd}</code>
+                                            <p className="text-xs text-muted-foreground mt-1">{command.desc}</p>
+                                          </div>
+                                          <Button variant="ghost" size="sm" onClick={() => copyCommand(command.cmd)}>
+                                            <Copy className="w-4 h-4" />
+                                          </Button>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                </div>
+                              </DialogContent>
+                            </Dialog>
+                          </CardContent>
+                        </Card>
                       </div>
                     </TabsContent>
 
