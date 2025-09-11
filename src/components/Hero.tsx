@@ -48,34 +48,6 @@ export const Hero = () => {
                 </p>
               </div>
 
-              {/* CTA buttons */}
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" className="group bg-gradient-primary text-white hover:shadow-glow transition-all duration-300">
-                  <Play className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
-                  Start Learning
-                  <ChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-                </Button>
-                <Button size="lg" variant="outline" className="border-primary/30 hover:border-primary hover:bg-primary/5">
-                  <Code className="w-5 h-5 mr-2" />
-                  View Playground
-                </Button>
-              </div>
-
-              {/* Stats */}
-              <div className="grid grid-cols-3 gap-8 pt-8 border-t border-border/50">
-                <div className="text-center lg:text-left">
-                  <div className="text-2xl font-bold gradient-text">50+</div>
-                  <div className="text-sm text-muted-foreground">Interactive Lessons</div>
-                </div>
-                <div className="text-center lg:text-left">
-                  <div className="text-2xl font-bold gradient-text">3D</div>
-                  <div className="text-sm text-muted-foreground">Visualizations</div>
-                </div>
-                <div className="text-center lg:text-left">
-                  <div className="text-2xl font-bold gradient-text">Live</div>
-                  <div className="text-sm text-muted-foreground">Command Simulator</div>
-                </div>
-              </div>
             </div>
 
             {/* Right visual element */}
