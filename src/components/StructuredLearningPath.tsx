@@ -577,17 +577,6 @@ export const StructuredLearningPath = () => {
 
                   {/* Detailed Module Content Dialog */}
                   <Dialog>
-                    <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-border/50">
-                      <DialogTrigger asChild>
-                        <Button className="group bg-gradient-primary text-white hover:shadow-glow transition-all duration-300">
-                          Start Module
-                          <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                        </Button>
-                      </DialogTrigger>
-                      <Button variant="outline" className="border-primary/30 hover:border-primary hover:bg-primary/5">
-                        Preview Content
-                      </Button>
-                    </div>
                     <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
                       <DialogHeader>
                         <DialogTitle className="text-2xl">Kubernetes Fundamentals - Complete Module</DialogTitle>
@@ -1897,33 +1886,6 @@ spec:
           </Tabs>
         </div>
 
-        {/* Progress tracking */}
-        <div className="max-w-4xl mx-auto mt-16">
-          <Card className="card-gradient border-border/50">
-            <CardContent className="p-8">
-              <div className="flex items-center justify-between flex-wrap gap-6">
-                <div className="space-y-2">
-                  <h3 className="text-xl font-semibold">Track Your Progress</h3>
-                  <p className="text-muted-foreground">Get personalized learning recommendations and track completion</p>
-                </div>
-                <div className="flex items-center gap-6">
-                  <div className="flex items-center gap-2">
-                    <BarChart3 className="w-5 h-5 text-tech-green" />
-                    <span className="text-sm">Progress Analytics</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Users className="w-5 h-5 text-primary" />
-                    <span className="text-sm">Community Support</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Shield className="w-5 h-5 text-accent" />
-                    <span className="text-sm">Certificate</span>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
       </div>
     </section>
   );
