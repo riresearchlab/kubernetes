@@ -112,31 +112,21 @@ export const KubernetesFundamentals = () => {
           </p>
         </div>
 
-        <Tabs defaultValue="containers" className="max-w-7xl mx-auto">
-          <TabsList className="grid w-full grid-cols-4 h-12 mb-8">
-            <TabsTrigger value="containers" className="text-sm">
-              Containers
-            </TabsTrigger>
-            <TabsTrigger value="architecture" className="text-sm">
-              Architecture
-            </TabsTrigger>
-            <TabsTrigger value="objects" className="text-sm">
-              Core Objects
-            </TabsTrigger>
-            <TabsTrigger value="workloads" className="text-sm">
-              Workloads
-            </TabsTrigger>
-          </TabsList>
-
-          {/* Containers Tab */}
-          <TabsContent value="containers" className="space-y-6">
+        <div className="max-w-7xl mx-auto space-y-16">
+          {/* Container Fundamentals Section */}
+          <div className="space-y-8">
+            <div className="text-center">
+              <h3 className="text-2xl font-bold mb-4 flex items-center justify-center gap-2">
+                <Box className="w-6 h-6 text-primary" />
+                Container Fundamentals
+              </h3>
+              <p className="text-lg text-muted-foreground">Understanding the building blocks of containerization</p>
+            </div>
+            
             <div className="grid md:grid-cols-2 gap-6">
               <Card className="card-gradient border-border/50">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Box className="w-5 h-5 text-primary" />
-                    Container Fundamentals
-                  </CardTitle>
+                  <CardTitle>Core Concepts</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {containerConcepts.map((concept, index) => (
@@ -240,16 +230,20 @@ export const KubernetesFundamentals = () => {
                 </CardContent>
               </Card>
             </div>
-          </TabsContent>
+          </div>
 
-          {/* Architecture Tab */}
-          <TabsContent value="architecture" className="space-y-6">
+          {/* Kubernetes Architecture Section */}
+          <div className="space-y-8">
+            <div className="text-center">
+              <h3 className="text-2xl font-bold mb-4 flex items-center justify-center gap-2">
+                <Server className="w-6 h-6 text-primary" />
+                Kubernetes Cluster Architecture
+              </h3>
+              <p className="text-lg text-muted-foreground">Click on components to explore their functionality</p>
+            </div>
+            
             <Card className="card-gradient border-border/50">
-              <CardHeader>
-                <CardTitle className="text-center">Kubernetes Cluster Architecture</CardTitle>
-                <p className="text-center text-muted-foreground">Click on components to explore their functionality</p>
-              </CardHeader>
-              <CardContent>
+              <CardContent className="p-8">
                 <div className="grid md:grid-cols-3 gap-6">
                   {k8sArchitecture.map((component, index) => (
                     <div key={index} className="group cursor-pointer">
@@ -270,10 +264,18 @@ export const KubernetesFundamentals = () => {
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
+          </div>
 
-          {/* Core Objects Tab */}
-          <TabsContent value="objects" className="space-y-6">
+          {/* Core Objects Section */}
+          <div className="space-y-8">
+            <div className="text-center">
+              <h3 className="text-2xl font-bold mb-4 flex items-center justify-center gap-2">
+                <Network className="w-6 h-6 text-primary" />
+                Core Kubernetes Objects
+              </h3>
+              <p className="text-lg text-muted-foreground">Essential building blocks of Kubernetes applications</p>
+            </div>
+            
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {["Pods", "Deployments", "Services", "ConfigMaps", "Secrets", "Namespaces"].map((object, index) => (
                 <Card key={index} className="card-gradient border-border/50 hover-lift cursor-pointer">
@@ -292,10 +294,18 @@ export const KubernetesFundamentals = () => {
                 </Card>
               ))}
             </div>
-          </TabsContent>
+          </div>
 
-          {/* Workloads Tab */}
-          <TabsContent value="workloads" className="space-y-6">
+          {/* Workloads Section */}
+          <div className="space-y-8">
+            <div className="text-center">
+              <h3 className="text-2xl font-bold mb-4 flex items-center justify-center gap-2">
+                <Settings className="w-6 h-6 text-primary" />
+                Kubernetes Workloads
+              </h3>
+              <p className="text-lg text-muted-foreground">Different types of workloads for various use cases</p>
+            </div>
+            
             <div className="grid md:grid-cols-2 gap-6">
               {[
                 { title: "StatefulSets", description: "Stateful applications with stable network identity", icon: Database },
@@ -321,8 +331,8 @@ export const KubernetesFundamentals = () => {
                 </Card>
               ))}
             </div>
-          </TabsContent>
-        </Tabs>
+          </div>
+        </div>
       </div>
     </section>
   );
