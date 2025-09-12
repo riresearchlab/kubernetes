@@ -130,9 +130,9 @@ export const InteractivePlayground = () => {
 
             {/* Terminal Tab */}
             <TabsContent value="terminal" className="mt-0">
-              <div className="grid lg:grid-cols-3 gap-8">
-                {/* Command suggestions */}
-                <div className="lg:col-span-1">
+              <div className="grid lg:grid-cols-2 gap-8">
+                {/* Left Side - Command suggestions and info */}
+                <div className="space-y-6">
                   <Card className="card-gradient border-border/50">
                     <CardHeader>
                       <CardTitle className="text-lg">Quick Commands</CardTitle>
@@ -150,84 +150,133 @@ export const InteractivePlayground = () => {
                       ))}
                     </CardContent>
                   </Card>
-                </div>
 
-                {/* Terminal */}
-                <div className="lg:col-span-2">
                   <Card className="card-gradient border-border/50">
-                    <CardHeader className="flex flex-row items-center justify-between">
-                      <CardTitle className="text-lg flex items-center gap-2">
-                        <Terminal className="w-5 h-5" />
-                        Kubernetes Terminal
-                      </CardTitle>
-                      <div className="flex gap-2">
-                        <Button size="sm" variant="outline" onClick={clearTerminal}>
-                          <RotateCcw className="w-4 h-4" />
-                        </Button>
-                      </div>
+                    <CardHeader>
+                      <CardTitle className="text-lg">Terminal Features</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                      {/* Terminal output */}
-                      <div className="terminal min-h-[300px] p-4">
-                        <div className="flex items-center gap-2 mb-4">
-                          <div className="w-3 h-3 bg-red-500 rounded-full" />
-                          <div className="w-3 h-3 bg-yellow-500 rounded-full" />
-                          <div className="w-3 h-3 bg-tech-green rounded-full" />
-                          <span className="ml-2 text-xs text-muted-foreground">cluster.local</span>
-                        </div>
-                        
-                        {/* Command history */}
-                        {history.map((cmd, index) => (
-                          <div key={index} className="mb-2">
-                            <div className="flex items-center gap-2 text-primary">
-                              <span>$</span>
-                              <span className="font-mono text-sm">{cmd}</span>
-                            </div>
-                          </div>
-                        ))}
-                        
-                        {/* Current output */}
-                        {output && (
-                          <div className="mb-4 text-muted-foreground font-mono text-sm whitespace-pre-line">
-                            {output}
-                          </div>
-                        )}
-                        
-                        {/* Loading state */}
-                        {isLoading && (
-                          <div className="flex items-center gap-2 text-accent">
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                            <span className="text-sm">Executing command...</span>
-                          </div>
-                        )}
+                      <div className="flex items-center gap-3">
+                        <CheckCircle className="w-5 h-5 text-tech-green" />
+                        <span className="text-sm">Safe sandbox environment</span>
                       </div>
+                      <div className="flex items-center gap-3">
+                        <CheckCircle className="w-5 h-5 text-tech-green" />
+                        <span className="text-sm">Real kubectl command syntax</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <CheckCircle className="w-5 h-5 text-tech-green" />
+                        <span className="text-sm">Instant feedback and results</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <CheckCircle className="w-5 h-5 text-tech-green" />
+                        <span className="text-sm">Command history tracking</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
 
-                      {/* Command input */}
-                      <div className="flex gap-2">
+                {/* Right Side - Terminal */}
+                <div>
+                  <div className="bg-slate-900 rounded-lg border border-border/50 shadow-xl">
+                    {/* Terminal Header */}
+                    <div className="flex items-center justify-between p-3 border-b border-slate-700 bg-slate-800 rounded-t-lg">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-red-500 rounded-full" />
+                        <div className="w-3 h-3 bg-yellow-500 rounded-full" />
+                        <div className="w-3 h-3 bg-green-500 rounded-full" />
+                        <span className="ml-2 text-sm text-slate-300 font-medium">Kubernetes Terminal</span>
+                      </div>
+                      <Button 
+                        size="sm" 
+                        variant="ghost" 
+                        onClick={clearTerminal}
+                        className="text-slate-300 hover:text-white hover:bg-slate-700 text-xs px-3 py-1 h-auto"
+                      >
+                        Clear
+                      </Button>
+                    </div>
+                    
+                    {/* Terminal Content */}
+                    <div className="p-4 min-h-[400px] bg-slate-900 rounded-b-lg font-mono text-sm">
+                      {/* Command history */}
+                      {history.map((cmd, index) => (
+                        <div key={index} className="mb-2">
+                          <div className="flex items-center gap-2">
+                            <span className="text-cyan-400">admin@ubuntu:~$</span>
+                            <span className="text-white">{cmd}</span>
+                          </div>
+                          {commandOutputs[cmd as keyof typeof commandOutputs] && (
+                            <div className="mt-1 mb-3 text-green-400 whitespace-pre-line">
+                              {commandOutputs[cmd as keyof typeof commandOutputs]}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                      
+                      {/* Current output */}
+                      {output && !history.includes(command) && (
+                        <div className="mb-4 text-green-400 whitespace-pre-line">
+                          {output}
+                        </div>
+                      )}
+                      
+                      {/* Loading state */}
+                      {isLoading && (
+                        <div className="flex items-center gap-2 text-yellow-400 mb-4">
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          <span>Executing command...</span>
+                        </div>
+                      )}
+                      
+                      {/* Current command line */}
+                      <div className="flex items-center gap-2">
+                        <span className="text-cyan-400">admin@ubuntu:~$</span>
                         <div className="flex-1 relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-primary">$</span>
-                          <Input
+                          <input
+                            type="text"
                             value={command}
                             onChange={(e) => setCommand(e.target.value)}
-                            placeholder="Type kubectl command here..."
-                            className="pl-8 font-mono bg-background/50"
+                            placeholder=""
+                            className="bg-transparent text-white outline-none border-none w-full font-mono"
                             onKeyDown={(e) => {
                               if (e.key === 'Enter') {
                                 executeCommand();
                               }
                             }}
+                            disabled={isLoading}
                           />
+                          <span className="absolute top-0 left-0 w-2 h-5 bg-white animate-pulse" style={{
+                            left: `${command.length * 0.6}rem`
+                          }} />
                         </div>
-                        <Button 
-                          onClick={executeCommand} 
-                          disabled={!command.trim() || isLoading}
-                          className="bg-gradient-primary text-white"
-                        >
-                          <Play className="w-4 h-4" />
-                        </Button>
                       </div>
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </div>
+                  
+                  {/* Command input below terminal for mobile */}
+                  <div className="mt-4 lg:hidden">
+                    <div className="flex gap-2">
+                      <Input
+                        value={command}
+                        onChange={(e) => setCommand(e.target.value)}
+                        placeholder="Type kubectl command here..."
+                        className="font-mono bg-background/50"
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            executeCommand();
+                          }
+                        }}
+                      />
+                      <Button 
+                        onClick={executeCommand} 
+                        disabled={!command.trim() || isLoading}
+                        className="bg-gradient-primary text-white"
+                      >
+                        <Play className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </TabsContent>
