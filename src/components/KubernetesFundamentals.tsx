@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { ChevronDown, Box, Server, Network, Database, Shield, Settings, Play, Pause, RotateCcw, Copy, Terminal } from "lucide-react";
+import { ChevronDown, Box, Server, Network, Database, Shield, Settings, Play, Pause, RotateCcw, Copy, Terminal, BookOpen, Star, Target, FileText, Lightbulb } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
@@ -367,6 +367,18 @@ const coreObjectsData = {
       "Ephemeral by nature",
       "Usually contains a single container"
     ],
+    useCases: [
+      "Single-container applications",
+      "Sidecar pattern implementations",
+      "Init containers for setup tasks",
+      "Testing and development environments"
+    ],
+    bestPractices: [
+      "Use one container per Pod unless containers need to share resources",
+      "Always specify resource limits and requests",
+      "Use health checks (liveness and readiness probes)",
+      "Avoid using Pods directly in production - use Deployments instead"
+    ],
     commands: [
       {
         description: "Create a simple pod",
@@ -416,6 +428,18 @@ spec:
       "Self-healing capabilities",
       "Version management"
     ],
+    useCases: [
+      "Stateless applications",
+      "Web applications and APIs",
+      "Microservices architecture",
+      "Production workloads"
+    ],
+    bestPractices: [
+      "Always use Deployments instead of creating Pods directly",
+      "Set appropriate replica counts based on load",
+      "Use rolling updates for zero-downtime deployments",
+      "Configure resource limits and requests for all containers"
+    ],
     commands: [
       {
         description: "Create a deployment",
@@ -453,6 +477,68 @@ spec:
         ports:
         - containerPort: 80`
   },
+  ReplicaSets: {
+    title: "ReplicaSets",
+    description: "Maintains a stable set of replica Pods",
+    overview: "ReplicaSets ensure that a specified number of Pod replicas are running at any given time. They are the underlying mechanism that Deployments use to manage Pods.",
+    keyFeatures: [
+      "Maintains desired replica count",
+      "Pod template for creating new Pods",
+      "Label selector for Pod management",
+      "Scaling capabilities"
+    ],
+    useCases: [
+      "Underlying mechanism for Deployments",
+      "Simple scaling scenarios",
+      "Custom controllers",
+      "Legacy workload management"
+    ],
+    bestPractices: [
+      "Use Deployments instead of ReplicaSets directly",
+      "Ensure label selectors match Pod labels exactly",
+      "Monitor replica count and Pod health",
+      "Use ReplicaSets only when you need more control than Deployments provide"
+    ],
+    commands: [
+      {
+        description: "Create a ReplicaSet",
+        command: "kubectl create -f replicaset.yaml",
+        output: "replicaset.apps/nginx-replicaset created"
+      },
+      {
+        description: "Get ReplicaSets",
+        command: "kubectl get replicasets",
+        output: `NAME               DESIRED   CURRENT   READY   AGE
+nginx-replicaset   3         3         3       2m`
+      },
+      {
+        description: "Scale a ReplicaSet",
+        command: "kubectl scale replicaset nginx-replicaset --replicas=5",
+        output: "replicaset.apps/nginx-replicaset scaled"
+      }
+    ],
+    yamlExample: `apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: nginx-replicaset
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.20
+        ports:
+        - containerPort: 80`
+  },
   Services: {
     title: "Services", 
     description: "Stable network endpoints for accessing Pods",
@@ -462,6 +548,18 @@ spec:
       "Service discovery via DNS",
       "Multiple service types (ClusterIP, NodePort, LoadBalancer)",
       "Session affinity support"
+    ],
+    useCases: [
+      "Internal service communication",
+      "Exposing applications to external traffic",
+      "Load balancing across multiple Pods",
+      "Service mesh integration"
+    ],
+    bestPractices: [
+      "Use ClusterIP for internal communication",
+      "Use NodePort or LoadBalancer for external access",
+      "Ensure service selectors match Pod labels",
+      "Use meaningful service names for DNS resolution"
     ],
     commands: [
       {
@@ -500,6 +598,18 @@ spec:
       "Volume mounting",
       "Command-line arguments"
     ],
+    useCases: [
+      "Application configuration",
+      "Environment-specific settings",
+      "Feature flags",
+      "Non-sensitive configuration data"
+    ],
+    bestPractices: [
+      "Use ConfigMaps for non-sensitive configuration data",
+      "Keep configuration data separate from application code",
+      "Use meaningful keys and organize data logically",
+      "Consider using ConfigMap generators for large configurations"
+    ],
     commands: [
       {
         description: "Create ConfigMap from literals",
@@ -532,6 +642,18 @@ data:
       "Automatic rotation support",
       "Encryption at rest"
     ],
+    useCases: [
+      "Database passwords and connection strings",
+      "API keys and tokens",
+      "TLS certificates and private keys",
+      "Any sensitive configuration data"
+    ],
+    bestPractices: [
+      "Use Secrets for sensitive data, ConfigMaps for non-sensitive data",
+      "Enable encryption at rest for Secrets",
+      "Use external secret management systems for production",
+      "Regularly rotate secrets and monitor access"
+    ],
     commands: [
       {
         description: "Create a secret",
@@ -563,6 +685,18 @@ data:
       "RBAC boundaries",
       "Resource quotas",
       "Network policies"
+    ],
+    useCases: [
+      "Multi-tenant environments",
+      "Environment separation (dev, staging, prod)",
+      "Team-based resource organization",
+      "Application isolation"
+    ],
+    bestPractices: [
+      "Use namespaces to organize resources logically",
+      "Implement RBAC policies per namespace",
+      "Set resource quotas to prevent resource exhaustion",
+      "Use meaningful namespace names that reflect their purpose"
     ],
     commands: [
       {
@@ -1049,23 +1183,31 @@ export const KubernetesFundamentals = () => {
             </div>
             
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {["Pods", "Deployments", "Services", "ConfigMaps", "Secrets", "Namespaces"].map((object, index) => (
-                <Card key={index} className="card-gradient border-border/50 hover-lift cursor-pointer">
+              {[
+                { name: "Pods", icon: Box, color: "from-blue-500 to-blue-600" },
+                { name: "Deployments", icon: Settings, color: "from-green-500 to-green-600" },
+                { name: "ReplicaSets", icon: Server, color: "from-purple-500 to-purple-600" },
+                { name: "Services", icon: Network, color: "from-orange-500 to-orange-600" },
+                { name: "ConfigMaps", icon: FileText, color: "from-cyan-500 to-cyan-600" },
+                { name: "Secrets", icon: Shield, color: "from-red-500 to-red-600" },
+                { name: "Namespaces", icon: Database, color: "from-indigo-500 to-indigo-600" }
+              ].map((object, index) => (
+                <Card key={index} className="card-gradient border-border/50 hover-lift cursor-pointer group">
                   <CardContent className="p-6 text-center">
-                    <div className="w-12 h-12 bg-gradient-to-r from-primary to-accent rounded-lg mx-auto mb-4 flex items-center justify-center">
-                      <Box className="w-6 h-6 text-white" />
+                    <div className={`w-12 h-12 bg-gradient-to-r ${object.color} rounded-lg mx-auto mb-4 flex items-center justify-center group-hover:scale-110 transition-transform duration-200`}>
+                      <object.icon className="w-6 h-6 text-white" />
                     </div>
-                    <h3 className="text-lg font-semibold mb-2">{object}</h3>
+                    <h3 className="text-lg font-semibold mb-2">{object.name}</h3>
                     <p className="text-sm text-muted-foreground mb-4">
-                      Interactive {object.toLowerCase()} explorer with examples
+                      Interactive {object.name.toLowerCase()} explorer with examples
                     </p>
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="w-full"
-                      onClick={() => setSelectedObject(object)}
+                      className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
+                      onClick={() => setSelectedObject(object.name)}
                     >
-                      Explore {object}
+                      Explore {object.name}
                     </Button>
                   </CardContent>
                 </Card>
@@ -1124,7 +1266,13 @@ export const KubernetesFundamentals = () => {
               <DialogHeader>
                 <DialogTitle className="text-2xl flex items-center gap-3">
                   <div className="w-8 h-8 bg-gradient-to-r from-primary to-accent rounded-lg flex items-center justify-center">
-                    <Box className="w-5 h-5 text-white" />
+                    {selectedObject === "Pods" && <Box className="w-5 h-5 text-white" />}
+                    {selectedObject === "Deployments" && <Settings className="w-5 h-5 text-white" />}
+                    {selectedObject === "ReplicaSets" && <Server className="w-5 h-5 text-white" />}
+                    {selectedObject === "Services" && <Network className="w-5 h-5 text-white" />}
+                    {selectedObject === "ConfigMaps" && <FileText className="w-5 h-5 text-white" />}
+                    {selectedObject === "Secrets" && <Shield className="w-5 h-5 text-white" />}
+                    {selectedObject === "Namespaces" && <Database className="w-5 h-5 text-white" />}
                   </div>
                   {coreObjectsData[selectedObject as keyof typeof coreObjectsData].title}
                 </DialogTitle>
@@ -1135,49 +1283,88 @@ export const KubernetesFundamentals = () => {
               
               <div className="space-y-6">
                 {/* Overview */}
-                <div>
-                  <h3 className="text-lg font-semibold mb-3">Overview</h3>
-                  <p className="text-muted-foreground">
+                <div className="bg-gradient-to-r from-primary/5 to-accent/5 p-4 rounded-lg border border-primary/20">
+                  <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                    <BookOpen className="w-5 h-5 text-primary" />
+                    Overview
+                  </h3>
+                  <p className="text-muted-foreground leading-relaxed">
                     {coreObjectsData[selectedObject as keyof typeof coreObjectsData].overview}
                   </p>
                 </div>
 
                 {/* Key Features */}
                 <div>
-                  <h3 className="text-lg font-semibold mb-3">Key Features</h3>
-                  <div className="grid md:grid-cols-2 gap-2">
+                  <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                    <Star className="w-5 h-5 text-accent" />
+                    Key Features
+                  </h3>
+                  <div className="grid md:grid-cols-2 gap-3">
                     {coreObjectsData[selectedObject as keyof typeof coreObjectsData].keyFeatures.map((feature, index) => (
-                      <div key={index} className="flex items-center gap-2">
-                        <div className="w-1.5 h-1.5 bg-primary rounded-full" />
-                        <span className="text-sm">{feature}</span>
+                      <div key={index} className="flex items-start gap-3 p-3 bg-muted/30 rounded-lg border border-border/50">
+                        <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
+                        <span className="text-sm font-medium">{feature}</span>
                       </div>
                     ))}
                   </div>
                 </div>
 
+                {/* Use Cases */}
+                {coreObjectsData[selectedObject as keyof typeof coreObjectsData].useCases && (
+                  <div>
+                    <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                      <Target className="w-5 h-5 text-green-500" />
+                      Common Use Cases
+                    </h3>
+                    <div className="grid md:grid-cols-2 gap-2">
+                      {coreObjectsData[selectedObject as keyof typeof coreObjectsData].useCases?.map((useCase, index) => (
+                        <div key={index} className="flex items-center gap-2 p-2 bg-green-50 dark:bg-green-900/20 rounded border border-green-200 dark:border-green-800">
+                          <div className="w-1.5 h-1.5 bg-green-500 rounded-full" />
+                          <span className="text-sm text-green-700 dark:text-green-300">{useCase}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 {/* Commands Section */}
                 <div>
-                  <h3 className="text-lg font-semibold mb-3">Common Commands</h3>
+                  <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                    <Terminal className="w-5 h-5 text-blue-500" />
+                    Common Commands
+                  </h3>
                   <div className="space-y-4">
                     {coreObjectsData[selectedObject as keyof typeof coreObjectsData].commands.map((cmd, index) => (
-                      <div key={index} className="border border-border/50 rounded-lg">
-                        <div className="p-3 bg-muted/30 border-b border-border/50">
-                          <p className="text-sm font-medium">{cmd.description}</p>
+                      <div key={index} className="border border-border/50 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                        <div className="p-4 bg-gradient-to-r from-muted/50 to-muted/30 border-b border-border/50">
+                          <p className="text-sm font-medium text-foreground">{cmd.description}</p>
                         </div>
-                        <div className="p-3 space-y-3">
-                          <div className="bg-slate-900 rounded p-3 font-mono text-sm">
-                            <div className="flex items-center justify-between mb-2">
-                              <span className="text-cyan-400">$ {cmd.command}</span>
-                              <Button 
-                                size="sm" 
-                                variant="ghost" 
-                                className="h-6 px-2 text-slate-300 hover:text-white"
-                                onClick={() => navigator.clipboard.writeText(cmd.command)}
-                              >
-                                <Copy className="w-3 h-3" />
-                              </Button>
+                        <div className="p-4 space-y-3">
+                          <div className="bg-slate-900 rounded-lg p-4 font-mono text-sm relative group">
+                            <div className="flex items-center justify-between mb-3">
+                              <span className="text-cyan-400 font-semibold">$ {cmd.command}</span>
+                              <div className="flex gap-2">
+                                <Button 
+                                  size="sm" 
+                                  variant="ghost" 
+                                  className="h-7 px-3 text-slate-300 hover:text-white hover:bg-slate-700 opacity-0 group-hover:opacity-100 transition-opacity"
+                                  onClick={() => navigator.clipboard.writeText(cmd.command)}
+                                >
+                                  <Copy className="w-3 h-3 mr-1" />
+                                  Copy
+                                </Button>
+                                <Button 
+                                  size="sm" 
+                                  variant="ghost" 
+                                  className="h-7 px-3 text-slate-300 hover:text-white hover:bg-slate-700 opacity-0 group-hover:opacity-100 transition-opacity"
+                                  onClick={() => navigator.clipboard.writeText(cmd.output)}
+                                >
+                                  <Copy className="w-3 h-3 mr-1" />
+                                  Copy Output
+                                </Button>
+                              </div>
                             </div>
-                            <div className="text-green-400 whitespace-pre-wrap">{cmd.output}</div>
+                            <div className="text-green-400 whitespace-pre-wrap leading-relaxed">{cmd.output}</div>
                           </div>
                         </div>
                       </div>
@@ -1187,21 +1374,46 @@ export const KubernetesFundamentals = () => {
 
                 {/* YAML Example */}
                 <div>
-                  <h3 className="text-lg font-semibold mb-3">YAML Example</h3>
-                  <div className="bg-slate-900 rounded-lg p-4 font-mono text-sm relative">
-                    <Button 
-                      size="sm" 
-                      variant="ghost" 
-                      className="absolute top-2 right-2 h-6 px-2 text-slate-300 hover:text-white"
-                      onClick={() => navigator.clipboard.writeText(coreObjectsData[selectedObject as keyof typeof coreObjectsData].yamlExample)}
-                    >
-                      <Copy className="w-3 h-3" />
-                    </Button>
-                    <pre className="text-slate-100 whitespace-pre-wrap overflow-x-auto">
+                  <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                    <FileText className="w-5 h-5 text-purple-500" />
+                    YAML Example
+                  </h3>
+                  <div className="bg-slate-900 rounded-lg p-4 font-mono text-sm relative group">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-slate-400 text-xs font-medium uppercase tracking-wider">YAML Configuration</span>
+                      <Button 
+                        size="sm" 
+                        variant="ghost" 
+                        className="h-7 px-3 text-slate-300 hover:text-white hover:bg-slate-700 opacity-0 group-hover:opacity-100 transition-opacity"
+                        onClick={() => navigator.clipboard.writeText(coreObjectsData[selectedObject as keyof typeof coreObjectsData].yamlExample)}
+                      >
+                        <Copy className="w-3 h-3 mr-1" />
+                        Copy YAML
+                      </Button>
+                    </div>
+                    <pre className="text-slate-100 whitespace-pre-wrap overflow-x-auto leading-relaxed">
                       {coreObjectsData[selectedObject as keyof typeof coreObjectsData].yamlExample}
                     </pre>
                   </div>
                 </div>
+
+                {/* Best Practices */}
+                {coreObjectsData[selectedObject as keyof typeof coreObjectsData].bestPractices && (
+                  <div>
+                    <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                      <Lightbulb className="w-5 h-5 text-yellow-500" />
+                      Best Practices
+                    </h3>
+                    <div className="space-y-2">
+                      {coreObjectsData[selectedObject as keyof typeof coreObjectsData].bestPractices?.map((practice, index) => (
+                        <div key={index} className="flex items-start gap-3 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
+                          <div className="w-2 h-2 bg-yellow-500 rounded-full mt-2 flex-shrink-0" />
+                          <span className="text-sm text-yellow-700 dark:text-yellow-300 font-medium">{practice}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </>
           )}
