@@ -10,6 +10,7 @@ const advancedTopics = [
     id: "networking",
     title: "Networking & Ingress",
     icon: Network,
+    difficulty: "Advanced",
     description: "CNI, Service Mesh, Ingress Controllers",
     color: "from-primary to-electric-blue",
     subtopics: [
@@ -24,6 +25,7 @@ const advancedTopics = [
     id: "storage",
     title: "Persistent Storage",
     icon: Database,
+    difficulty: "Intermediate",
     description: "PVs, PVCs, Storage Classes",
     color: "from-accent to-cyber-purple",
     subtopics: [
@@ -38,6 +40,7 @@ const advancedTopics = [
     id: "security",
     title: "Security & RBAC",
     icon: Shield,
+    difficulty: "Advanced",
     description: "Security best practices and access control",
     color: "from-tech-green to-primary",
     subtopics: [
@@ -52,6 +55,7 @@ const advancedTopics = [
     id: "monitoring",
     title: "Monitoring & Logging",
     icon: Monitor,
+    difficulty: "Intermediate",
     description: "Observability and debugging",
     color: "from-cyber-purple to-accent",
     subtopics: [
@@ -66,6 +70,7 @@ const advancedTopics = [
     id: "packaging",
     title: "Helm & Packaging",
     icon: Package,
+    difficulty: "Intermediate",
     description: "Application packaging and templating",
     color: "from-electric-blue to-primary",
     subtopics: [
@@ -80,6 +85,7 @@ const advancedTopics = [
     id: "scaling",
     title: "Scaling & Performance",
     icon: Zap,
+    difficulty: "Advanced",
     description: "Auto-scaling and performance optimization",
     color: "from-primary to-tech-green",
     subtopics: [
@@ -92,7 +98,11 @@ const advancedTopics = [
   }
 ];
 
-// Removed difficultyColors object as part of duration and difficulty removal
+const difficultyColors = {
+  "Beginner": "bg-tech-green/20 text-tech-green",
+  "Intermediate": "bg-accent/20 text-accent",
+  "Advanced": "bg-cyber-purple/20 text-cyber-purple"
+};
 
 export const AdvancedTopics = () => {
   const [activeTopics, setActiveTopics] = useState<string[]>([]);
@@ -141,7 +151,9 @@ export const AdvancedTopics = () => {
                       <div className={`p-3 rounded-xl bg-gradient-to-r ${topic.color} shadow-glow`}>
                         <topic.icon className="w-6 h-6 text-white" />
                       </div>
-                      {/* Removed difficulty badge */}
+                      <Badge className={difficultyColors[topic.difficulty as keyof typeof difficultyColors]}>
+                        {topic.difficulty}
+                      </Badge>
                     </div>
                     <CardTitle className="group-hover:gradient-text transition-all">
                       {topic.title}
@@ -251,21 +263,25 @@ export const AdvancedTopics = () => {
                 {
                   title: "High Availability Setup",
                   description: "Configure a production-ready multi-master cluster",
+                  difficulty: "Advanced",
                   estimatedTime: "45 minutes"
                 },
                 {
                   title: "Zero-Downtime Deployment",
                   description: "Implement rolling updates with health checks",
+                  difficulty: "Intermediate",
                   estimatedTime: "30 minutes"
                 },
                 {
                   title: "Security Hardening",
                   description: "Apply security best practices and policies",
+                  difficulty: "Advanced",
                   estimatedTime: "60 minutes"
                 },
                 {
                   title: "Monitoring Setup",
                   description: "Deploy complete monitoring stack with alerting",
+                  difficulty: "Intermediate",
                   estimatedTime: "40 minutes"
                 }
               ].map((scenario, index) => (
@@ -275,7 +291,9 @@ export const AdvancedTopics = () => {
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
                           <h3 className="text-lg font-semibold">{scenario.title}</h3>
-                          {/* Removed difficulty badge */}
+                          <Badge className={difficultyColors[scenario.difficulty as keyof typeof difficultyColors]}>
+                            {scenario.difficulty}
+                          </Badge>
                         </div>
                         <p className="text-sm text-muted-foreground mb-3">{scenario.description}</p>
                         <div className="flex items-center gap-4 text-xs text-muted-foreground">

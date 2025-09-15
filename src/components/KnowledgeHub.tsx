@@ -55,6 +55,7 @@ const troubleshootingGuides = [
   {
     title: "Pod Stuck in Pending State",
     category: "Pod Issues",
+    difficulty: "Beginner",
     symptoms: ["Pod shows Pending status", "Events show scheduling issues"],
     commonCauses: [
       "Insufficient cluster resources",
@@ -72,6 +73,7 @@ const troubleshootingGuides = [
   {
     title: "Service Not Accessible",
     category: "Networking",
+    difficulty: "Intermediate", 
     symptoms: ["Cannot connect to service", "Connection timeouts"],
     commonCauses: [
       "Incorrect service selector",
@@ -89,6 +91,7 @@ const troubleshootingGuides = [
   {
     title: "High Resource Usage",
     category: "Performance",
+    difficulty: "Advanced",
     symptoms: ["High CPU/memory usage", "Pod evictions", "Slow response times"],
     commonCauses: [
       "Resource limits not set",
@@ -109,22 +112,26 @@ const useCases = [
   {
     title: "Microservices Architecture",
     description: "Deploy and manage microservices with service mesh",
-    components: ["Deployments", "Services", "Ingress", "ConfigMaps"]
+    components: ["Deployments", "Services", "Ingress", "ConfigMaps"],
+    complexity: "Intermediate"
   },
   {
     title: "Stateful Applications",
     description: "Running databases and persistent workloads",
-    components: ["StatefulSets", "PersistentVolumes", "Headless Services"]
+    components: ["StatefulSets", "PersistentVolumes", "Headless Services"],
+    complexity: "Advanced"
   },
   {
     title: "Batch Processing",
     description: "ETL pipelines and scheduled jobs",
-    components: ["Jobs", "CronJobs", "ConfigMaps", "Secrets"]
+    components: ["Jobs", "CronJobs", "ConfigMaps", "Secrets"],
+    complexity: "Beginner"
   },
   {
     title: "CI/CD Integration",
     description: "Automated deployment pipelines",
-    components: ["Deployments", "Services", "Secrets", "RBAC"]
+    components: ["Deployments", "Services", "Secrets", "RBAC"],
+    complexity: "Intermediate"
   }
 ];
 
@@ -155,7 +162,11 @@ const communityResources = [
   }
 ];
 
-// difficultyColors object removed as part of the removal of all difficulty references
+const difficultyColors = {
+  "Beginner": "bg-tech-green/20 text-tech-green",
+  "Intermediate": "bg-accent/20 text-accent", 
+  "Advanced": "bg-cyber-purple/20 text-cyber-purple"
+};
 
 export const KnowledgeHub = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -245,7 +256,9 @@ export const KnowledgeHub = () => {
                                 <Badge variant="secondary" className="text-xs">
                                   {guide.category}
                                 </Badge>
-                                {/* Removed difficulty badge */}
+                                <Badge className={difficultyColors[guide.difficulty as keyof typeof difficultyColors]}>
+                                  {guide.difficulty}
+                                </Badge>
                               </div>
                             </div>
                           </div>
@@ -319,7 +332,9 @@ export const KnowledgeHub = () => {
                       <div className="p-3 rounded-xl bg-gradient-to-r from-primary to-accent shadow-glow">
                         <Lightbulb className="w-6 h-6 text-white" />
                       </div>
-                      {/* Complexity badge removed as part of the removal of all difficulty references */}
+                      <Badge className={difficultyColors[useCase.complexity as keyof typeof difficultyColors]}>
+                        {useCase.complexity}
+                      </Badge>
                     </div>
                     <CardTitle className="text-lg">{useCase.title}</CardTitle>
                     <p className="text-sm text-muted-foreground">
