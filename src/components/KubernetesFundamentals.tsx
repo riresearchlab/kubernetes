@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { ChevronDown, Box, Server, Network, Database, Shield, Settings, Play, Pause, RotateCcw, Copy, Terminal } from "lucide-react";
@@ -48,6 +47,314 @@ const k8sArchitecture = [
     color: "from-tech-green to-primary"
   }
 ];
+
+// Kubernetes Architecture Concepts Data
+const k8sConceptsData = {
+  "Control Plane": {
+    title: "Control Plane",
+    description: "The brain of Kubernetes that makes global decisions about the cluster",
+    overview: "The Control Plane manages the overall state of the cluster and makes decisions about scheduling, scaling, and maintaining the desired state of applications. It consists of several components that work together to provide the cluster's management capabilities.",
+    keyFeatures: [
+      "Cluster state management",
+      "API endpoint for all cluster operations", 
+      "Scheduling decisions for pod placement",
+      "Automatic scaling and self-healing",
+      "Configuration and secret management"
+    ],
+    commands: [
+      {
+        description: "Check control plane component status",
+        command: "kubectl get componentstatuses",
+        output: `NAME                 STATUS    MESSAGE   ERROR\ncontroller-manager   Healthy   ok\nscheduler            Healthy   ok\netcd-0               Healthy   ok`
+      },
+      {
+        description: "View control plane pods",
+        command: "kubectl get pods -n kube-system",
+        output: `NAME                                READY   STATUS    RESTARTS   AGE
+etcd-master-1                       1/1     Running   0          1d
+kube-apiserver-master-1             1/1     Running   0          1d
+kube-controller-manager-master-1    1/1     Running   0          1d
+kube-scheduler-master-1             1/1     Running   0          1d`
+      }
+    ],
+    components: {
+      "API Server": "The central hub that exposes the Kubernetes API",
+      "etcd": "Distributed key-value store for all cluster data",
+      "Scheduler": "Determines which nodes should run newly created pods",
+      "Controller Manager": "Runs controller processes that regulate cluster state"
+    }
+  },
+  "Worker Nodes": {
+    title: "Worker Nodes",
+    description: "The workhorses that run your containerized applications",
+    overview: "Worker Nodes are the machines where your application containers actually run. Each node contains the necessary services to run pods and is managed by the control plane.",
+    keyFeatures: [
+      "Container runtime environment",
+      "Pod lifecycle management",
+      "Network proxy and load balancing",
+      "Resource monitoring and reporting",
+      "Volume mounting and storage"
+    ],
+    commands: [
+      {
+        description: "List all nodes in the cluster",
+        command: "kubectl get nodes",
+        output: `NAME           STATUS   ROLES           AGE   VERSION
+master-1       Ready    control-plane   1d    v1.28.0
+worker-1       Ready    <none>          1d    v1.28.0
+worker-2       Ready    <none>          1d    v1.28.0
+worker-3       Ready    <none>          1d    v1.28.0`
+      },
+      {
+        description: "Get detailed node information",
+        command: "kubectl describe node worker-1",
+        output: `Name:               worker-1
+Roles:              <none>
+Labels:             beta.kubernetes.io/arch=amd64
+CreationTimestamp:  Sun, 13 Sep 2025 10:30:00 +0000
+Conditions:
+  Type             Status
+  Ready            True
+Capacity:
+  cpu:                4
+  memory:             8Gi`
+      }
+    ],
+    components: {
+      "Kubelet": "Primary node agent that manages pods and containers",
+      "Kube-proxy": "Network proxy that maintains network rules",
+      "Container Runtime": "Software responsible for running containers"
+    }
+  },
+  "Networking": {
+    title: "Networking",
+    description: "The communication backbone that connects all cluster components",
+    overview: "Kubernetes networking enables communication between pods, services, and external clients. It provides a flat network where every pod gets its own IP address.",
+    keyFeatures: [
+      "Pod-to-pod communication",
+      "Service discovery and load balancing",
+      "External traffic ingress",
+      "Network policies and security",
+      "Cross-node networking"
+    ],
+    commands: [
+      {
+        description: "List all services and their endpoints",
+        command: "kubectl get services,endpoints",
+        output: `NAME                 TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE\nservice/kubernetes   ClusterIP   10.96.0.1       <none>        443/TCP   1d\nservice/nginx        ClusterIP   10.96.1.100     <none>        80/TCP    2m`
+      },
+      {
+        description: "View ingress resources",
+        command: "kubectl get ingress",
+        output: `NAME              CLASS   HOSTS                 ADDRESS          PORTS     AGE\napp-ingress       nginx   app.example.com       192.168.1.200    80, 443   10m`
+      }
+    ],
+    components: {
+      "CNI Plugins": "Handle pod networking setup and IP assignment",
+      "Service Mesh": "Advanced networking layer for service communication",
+      "Ingress Controllers": "Manage external access to services"
+    }
+  }
+};
+
+// Individual Component Detailed Data
+const componentDetailsData = {
+  "API Server": {
+    title: "API Server",
+    description: "The central management hub for all Kubernetes operations",
+    overview: "The Kubernetes API Server is the central management entity that receives all REST requests for modifications to pods, services, replication sets/controllers and others, validates them, and processes them.",
+    keyFeatures: [
+      "RESTful API interface for all cluster operations",
+      "Authentication and authorization gateway", 
+      "Request validation and admission control",
+      "Cluster state management and coordination",
+      "Event notification and watch API"
+    ],
+    commands: [
+      {
+        description: "Check API server version",
+        command: "kubectl version --short",
+        output: `Client Version: v1.28.0\nKustomize Version: v5.0.4\nServer Version: v1.28.0`
+      },
+      {
+        description: "List available API resources",
+        command: "kubectl api-resources --verbs=list",
+        output: `NAME         SHORTNAMES   APIVERSION   NAMESPACED   KIND\npods         po           v1           true         Pod\nservices     svc          v1           true         Service\ndeployments  deploy       apps/v1      true         Deployment`
+      }
+    ]
+  },
+  "etcd": {
+    title: "etcd",
+    description: "The persistent storage backend for all cluster data",
+    overview: "etcd is a distributed, reliable key-value store used as Kubernetes' backing store for all cluster data. It stores configuration data, state data, and metadata.",
+    keyFeatures: [
+      "Distributed consensus using Raft algorithm",
+      "Strong consistency guarantees",
+      "High availability and fault tolerance",
+      "Watch API for real-time notifications",
+      "Backup and restore capabilities"
+    ],
+    commands: [
+      {
+        description: "Check etcd cluster health",
+        command: "kubectl exec -n kube-system etcd-master-1 -- etcdctl endpoint health",
+        output: `127.0.0.1:2379 is healthy: successfully committed proposal: took = 2.345ms`
+      }
+    ]
+  },
+  "Scheduler": {
+    title: "Scheduler",
+    description: "The intelligent pod placement engine",
+    overview: "The Kubernetes Scheduler is responsible for selecting an optimal node for newly created pods. It considers resource requirements, constraints, affinity rules, and optimization policies.",
+    keyFeatures: [
+      "Resource-aware scheduling algorithms",
+      "Constraint satisfaction and filtering",
+      "Affinity and anti-affinity rules",
+      "Priority-based pod scheduling",
+      "Extensible scheduling framework"
+    ],
+    commands: [
+      {
+        description: "View scheduler events",
+        command: "kubectl get events --field-selector reason=Scheduled",
+        output: `LAST SEEN   TYPE     REASON      OBJECT      MESSAGE\n2m          Normal   Scheduled   pod/nginx   Successfully assigned default/nginx to worker-1`
+      }
+    ]
+  },
+  "Controller Manager": {
+    title: "Controller Manager",
+    description: "The supervisor ensuring desired state is maintained",
+    overview: "The Controller Manager runs controller processes that regulate the state of the cluster. Each controller watches the cluster state and makes changes to move current state towards desired state.",
+    keyFeatures: [
+      "Desired state enforcement",
+      "Resource lifecycle management",
+      "Automatic remediation and healing",
+      "Controller coordination",
+      "Event-driven operations"
+    ],
+    commands: [
+      {
+        description: "Check controller manager status",
+        command: "kubectl get componentstatus controller-manager",
+        output: `NAME                 STATUS    MESSAGE\ncontroller-manager   Healthy   ok`
+      }
+    ]
+  },
+  "Kubelet": {
+    title: "Kubelet",
+    description: "The node agent managing pod lifecycle",
+    overview: "The kubelet is the primary node agent that runs on each node. It ensures that containers are running in a Pod by taking PodSpecs and managing their lifecycle.",
+    keyFeatures: [
+      "Pod lifecycle management",
+      "Container health monitoring",
+      "Resource reporting and metrics",
+      "Volume management and mounting",
+      "Node status reporting"
+    ],
+    commands: [
+      {
+        description: "Check kubelet service status",
+        command: "sudo systemctl status kubelet",
+        output: `● kubelet.service - kubelet: The Kubernetes Node Agent\n   Active: active (running) since Sun 2025-09-13 10:30:00 UTC`
+      }
+    ]
+  },
+  "Kube-proxy": {
+    title: "Kube-proxy",
+    description: "The network proxy enabling service communication",
+    overview: "kube-proxy is a network proxy that runs on each node and maintains network rules. These rules allow network communication to Pods from inside or outside the cluster.",
+    keyFeatures: [
+      "Service load balancing",
+      "Network rule management",
+      "Multiple proxy modes (iptables, IPVS)",
+      "Service discovery support",
+      "Connection forwarding"
+    ],
+    commands: [
+      {
+        description: "Check kube-proxy pods",
+        command: "kubectl get pods -n kube-system -l k8s-app=kube-proxy",
+        output: `NAME               READY   STATUS    RESTARTS   AGE\nkube-proxy-abc123  1/1     Running   0          1d`
+      }
+    ]
+  },
+  "Container Runtime": {
+    title: "Container Runtime",
+    description: "The engine that runs your containers",
+    overview: "The container runtime is responsible for running containers on each node. Kubernetes supports several runtimes including Docker, containerd, and CRI-O.",
+    keyFeatures: [
+      "Container lifecycle management",
+      "Image pulling and storage",
+      "Resource isolation and limits",
+      "Network and storage setup",
+      "Security and sandboxing"
+    ],
+    commands: [
+      {
+        description: "Check container runtime",
+        command: "kubectl get nodes -o wide",
+        output: `NAME     STATUS   CONTAINER-RUNTIME\nworker-1 Ready    containerd://1.6.6\nworker-2 Ready    containerd://1.6.6`
+      }
+    ]
+  },
+  "CNI Plugins": {
+    title: "CNI Plugins",
+    description: "Container Network Interface plugins for pod networking",
+    overview: "CNI plugins are responsible for configuring network interfaces in containers. They handle IP assignment, interface creation, and network policy enforcement.",
+    keyFeatures: [
+      "Pod IP address assignment",
+      "Network interface configuration",
+      "Inter-pod communication setup",
+      "Network policy enforcement",
+      "Cross-node networking"
+    ],
+    commands: [
+      {
+        description: "Check CNI configuration",
+        command: "ls -la /etc/cni/net.d/",
+        output: `total 12\n-rw-r--r-- 1 root root 292 Sep 13 10:30 10-flannel.conflist`
+      }
+    ]
+  },
+  "Service Mesh": {
+    title: "Service Mesh",
+    description: "Advanced networking layer for service communication",
+    overview: "A service mesh provides a dedicated infrastructure layer for service-to-service communication with traffic management, security, and observability features.",
+    keyFeatures: [
+      "Traffic management and routing",
+      "Security and encryption (mTLS)",
+      "Observability and monitoring",
+      "Policy enforcement",
+      "Circuit breaking and retries"
+    ],
+    commands: [
+      {
+        description: "Check service mesh pods",
+        command: "kubectl get pods -n istio-system",
+        output: `NAME                     READY   STATUS    RESTARTS   AGE\nistiod-123456789-abcde   1/1     Running   0          1h`
+      }
+    ]
+  },
+  "Ingress Controllers": {
+    title: "Ingress Controllers",
+    description: "Manage external access to services in the cluster",
+    overview: "Ingress Controllers manage external access to services, typically HTTP/HTTPS traffic. They provide load balancing, SSL termination, and name-based virtual hosting.",
+    keyFeatures: [
+      "External traffic routing",
+      "SSL/TLS termination",
+      "Load balancing",
+      "Path-based routing",
+      "Host-based routing"
+    ],
+    commands: [
+      {
+        description: "View ingress resources",
+        command: "kubectl get ingress",
+        output: `NAME          CLASS   HOSTS               ADDRESS        PORTS     AGE\napp-ingress   nginx   app.example.com     192.168.1.200  80, 443   10m`
+      }
+    ]
+  }
+};
 
 const coreObjectsData = {
   Pods: {
@@ -492,6 +799,7 @@ export const KubernetesFundamentals = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [selectedObject, setSelectedObject] = useState<string | null>(null);
+  const [selectedConcept, setSelectedConcept] = useState<string | null>(null);
   const [selectedWorkload, setSelectedWorkload] = useState<string | null>(null);
 
   const demoSteps = [
@@ -687,7 +995,11 @@ export const KubernetesFundamentals = () => {
               <CardContent className="p-8">
                 <div className="grid md:grid-cols-3 gap-6">
                   {k8sArchitecture.map((component, index) => (
-                    <div key={index} className="group cursor-pointer">
+                    <div 
+                      key={index} 
+                      className="group cursor-pointer" 
+                      onClick={() => setSelectedConcept(component.title)}
+                    >
                       <div className={`p-6 rounded-xl bg-gradient-to-r ${component.color} shadow-glow mb-4 group-hover:scale-105 transition-transform`}>
                         <component.icon className="w-8 h-8 text-white mx-auto" />
                       </div>
@@ -695,8 +1007,27 @@ export const KubernetesFundamentals = () => {
                       <p className="text-sm text-muted-foreground text-center mb-3">{component.description}</p>
                       <div className="space-y-2">
                         {component.components.map((item, itemIndex) => (
-                          <div key={itemIndex} className="p-2 terminal rounded text-xs text-center">
-                            {item}
+                          <div 
+                            key={itemIndex} 
+                            className="group/item p-3 terminal rounded-lg text-xs text-center hover:bg-gradient-to-r hover:from-primary/20 hover:to-accent/20 transition-all duration-300 cursor-pointer border border-transparent hover:border-primary/30 hover:shadow-lg hover:scale-105 transform relative overflow-hidden"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              console.log('Clicked component:', item);
+                              console.log('Component data exists:', !!componentDetailsData[item as keyof typeof componentDetailsData]);
+                              setSelectedConcept(item);
+                            }}
+                          >
+                            {/* Hover effect overlay */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-accent/10 opacity-0 group-hover/item:opacity-100 transition-opacity duration-300 rounded-lg" />
+                            
+                            {/* Content */}
+                            <div className="relative z-10 flex items-center justify-center gap-2">
+                              <span className="font-medium group-hover/item:text-primary transition-colors duration-300">{item}</span>
+                              <div className="w-1.5 h-1.5 bg-primary/50 rounded-full opacity-0 group-hover/item:opacity-100 group-hover/item:animate-pulse transition-all duration-300" />
+                            </div>
+                            
+                            {/* Interactive indicator */}
+                            <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-accent group-hover/item:w-full transition-all duration-300" />
                           </div>
                         ))}
                       </div>
@@ -877,7 +1208,219 @@ export const KubernetesFundamentals = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Workloads Modal */}
+      {/* Individual Component Details Modal */}
+      <Dialog open={!!selectedConcept && !!componentDetailsData[selectedConcept as keyof typeof componentDetailsData]} onOpenChange={() => setSelectedConcept(null)}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          {selectedConcept && componentDetailsData[selectedConcept as keyof typeof componentDetailsData] && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="text-2xl flex items-center gap-3">
+                  <div className="w-8 h-8 bg-gradient-to-r from-primary to-accent rounded-lg flex items-center justify-center">
+                    <Server className="w-5 h-5 text-white" />
+                  </div>
+                  {componentDetailsData[selectedConcept as keyof typeof componentDetailsData].title}
+                </DialogTitle>
+                <DialogDescription className="text-lg">
+                  {componentDetailsData[selectedConcept as keyof typeof componentDetailsData].description}
+                </DialogDescription>
+              </DialogHeader>
+              
+              <div className="space-y-6">
+                {/* Overview */}
+                <div>
+                  <h3 className="text-lg font-semibold mb-3">What is {selectedConcept}?</h3>
+                  <p className="text-muted-foreground leading-relaxed mb-4">
+                    {componentDetailsData[selectedConcept as keyof typeof componentDetailsData].overview}
+                  </p>
+                  
+                  {/* Key Features */}
+                  <div>
+                    <h4 className="text-base font-semibold mb-3">Key Features</h4>
+                    <div className="grid md:grid-cols-2 gap-3">
+                      {componentDetailsData[selectedConcept as keyof typeof componentDetailsData].keyFeatures?.map((feature, index) => (
+                        <div key={index} className="flex items-start gap-3 p-3 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors">
+                          <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
+                          <span className="text-sm">{feature}</span>
+                        </div>
+                      )) || []}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Commands */}
+                <div>
+                  <h3 className="text-lg font-semibold mb-4">Common Commands</h3>
+                  <div className="space-y-4">
+                    {componentDetailsData[selectedConcept as keyof typeof componentDetailsData].commands?.map((cmd, index) => (
+                      <div key={index} className="border border-border/50 rounded-lg overflow-hidden hover:border-primary/30 transition-colors">
+                        <div className="p-3 bg-muted/30 border-b border-border/50">
+                          <p className="text-sm font-medium flex items-center gap-2">
+                            <Terminal className="w-4 h-4 text-primary" />
+                            {cmd.description}
+                          </p>
+                        </div>
+                        <div className="p-0">
+                          <div className="bg-slate-900 p-4 font-mono text-sm">
+                            <div className="flex items-center justify-between mb-3">
+                              <span className="text-cyan-400">$ {cmd.command}</span>
+                              <Button 
+                                size="sm" 
+                                variant="ghost" 
+                                className="h-6 px-2 text-slate-300 hover:text-white"
+                                onClick={() => navigator.clipboard.writeText(cmd.command)}
+                              >
+                                <Copy className="w-3 h-3" />
+                              </Button>
+                            </div>
+                            <div className="text-green-400 whitespace-pre-wrap text-xs leading-relaxed">
+                              {cmd.output}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )) || []}
+                    
+                    {(!componentDetailsData[selectedConcept as keyof typeof componentDetailsData].commands || componentDetailsData[selectedConcept as keyof typeof componentDetailsData].commands.length === 0) && (
+                      <div className="text-center py-8">
+                        <div className="w-16 h-16 bg-muted/30 rounded-full mx-auto mb-4 flex items-center justify-center">
+                          <Terminal className="w-8 h-8 text-muted-foreground" />
+                        </div>
+                        <p className="text-muted-foreground">Commands for {selectedConcept} coming soon!</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Examples */}
+                <div>
+                  <h3 className="text-lg font-semibold mb-4">Configuration Examples</h3>
+                  <div className="text-center py-12">
+                    <div className="w-16 h-16 bg-muted/30 rounded-full mx-auto mb-4 flex items-center justify-center">
+                      <Terminal className="w-8 h-8 text-muted-foreground" />
+                    </div>
+                    <p className="text-muted-foreground text-lg mb-2">Configuration examples coming soon!</p>
+                    <p className="text-sm text-muted-foreground">Check the Commands section above for practical usage examples of {selectedConcept}.</p>
+                    <div className="mt-6 p-4 bg-muted/20 rounded-lg border border-dashed border-muted-foreground/30">
+                      <p className="text-xs text-muted-foreground">
+                        💡 <strong>Pro tip:</strong> Use the commands above to explore {selectedConcept} in your own cluster!
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Kubernetes Architecture Concepts Modal (for main components) */}
+      <Dialog 
+        open={!!selectedConcept && !!k8sConceptsData[selectedConcept as keyof typeof k8sConceptsData] && !componentDetailsData[selectedConcept as keyof typeof componentDetailsData]} 
+        onOpenChange={() => setSelectedConcept(null)}
+      >
+        <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
+          {selectedConcept && k8sConceptsData[selectedConcept as keyof typeof k8sConceptsData] && !componentDetailsData[selectedConcept as keyof typeof componentDetailsData] && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="text-2xl flex items-center gap-3">
+                  <div className="w-8 h-8 bg-gradient-to-r from-primary to-accent rounded-lg flex items-center justify-center">
+                    <Server className="w-5 h-5 text-white" />
+                  </div>
+                  {k8sConceptsData[selectedConcept as keyof typeof k8sConceptsData].title}
+                </DialogTitle>
+                <DialogDescription className="text-lg">
+                  {k8sConceptsData[selectedConcept as keyof typeof k8sConceptsData].description}
+                </DialogDescription>
+              </DialogHeader>
+              
+              <div className="space-y-6">
+                {/* Overview */}
+                <div>
+                  <h3 className="text-lg font-semibold mb-3">What is {selectedConcept}?</h3>
+                  <p className="text-muted-foreground leading-relaxed mb-4">
+                    {k8sConceptsData[selectedConcept as keyof typeof k8sConceptsData].overview}
+                  </p>
+                  
+                  {/* Key Features */}
+                  <div>
+                    <h4 className="text-base font-semibold mb-3">Key Features</h4>
+                    <div className="grid md:grid-cols-2 gap-3">
+                      {k8sConceptsData[selectedConcept as keyof typeof k8sConceptsData].keyFeatures.map((feature, index) => (
+                        <div key={index} className="flex items-start gap-3 p-3 bg-muted/30 rounded-lg">
+                          <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
+                          <span className="text-sm">{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Components Breakdown */}
+                <div>
+                  <h3 className="text-lg font-semibold mb-4">Components Breakdown</h3>
+                  <div className="grid gap-4">
+                    {Object.entries(k8sConceptsData[selectedConcept as keyof typeof k8sConceptsData].components).map(([component, description]) => (
+                      <Card key={component} className="p-4 border border-border/50">
+                        <div className="flex items-start gap-3">
+                          <div className="w-3 h-3 bg-gradient-to-r from-primary to-accent rounded-full mt-1 flex-shrink-0" />
+                          <div className="flex-1">
+                            <h4 className="font-semibold text-base mb-2">{component}</h4>
+                            <p className="text-sm text-muted-foreground">{description}</p>
+                          </div>
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Commands */}
+                <div>
+                  <h3 className="text-lg font-semibold mb-4">Common Commands</h3>
+                  <div className="space-y-4">
+                    {k8sConceptsData[selectedConcept as keyof typeof k8sConceptsData].commands.map((cmd, index) => (
+                      <div key={index} className="border border-border/50 rounded-lg overflow-hidden">
+                        <div className="p-3 bg-muted/30 border-b border-border/50">
+                          <p className="text-sm font-medium">{cmd.description}</p>
+                        </div>
+                        <div className="p-0">
+                          <div className="bg-slate-900 p-4 font-mono text-sm">
+                            <div className="flex items-center justify-between mb-3">
+                              <span className="text-cyan-400">$ {cmd.command}</span>
+                              <Button 
+                                size="sm" 
+                                variant="ghost" 
+                                className="h-6 px-2 text-slate-300 hover:text-white"
+                                onClick={() => navigator.clipboard.writeText(cmd.command)}
+                              >
+                                <Copy className="w-3 h-3" />
+                              </Button>
+                            </div>
+                            <div className="text-green-400 whitespace-pre-wrap text-xs leading-relaxed">
+                              {cmd.output}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Examples */}
+                <div>
+                  <h3 className="text-lg font-semibold mb-4">Practical Examples</h3>
+                  <div className="text-center py-8">
+                    <div className="w-16 h-16 bg-muted/30 rounded-full mx-auto mb-4 flex items-center justify-center">
+                      <Terminal className="w-8 h-8 text-muted-foreground" />
+                    </div>
+                    <p className="text-muted-foreground">Examples and tutorials for {selectedConcept} coming soon!</p>
+                    <p className="text-sm text-muted-foreground mt-2">Check the Commands section above for practical kubectl usage.</p>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
       <Dialog open={!!selectedWorkload} onOpenChange={() => setSelectedWorkload(null)}>
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           {selectedWorkload && workloadsData[selectedWorkload as keyof typeof workloadsData] && (
