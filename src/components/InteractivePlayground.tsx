@@ -20,7 +20,6 @@ import {
   Monitor,
   Users,
   Shield,
-  Clock,
   Target,
   TrendingUp
 } from "lucide-react";
@@ -363,16 +362,12 @@ export const InteractivePlayground = () => {
                       title: "Rolling Updates",
                       description: "Watch how Kubernetes performs zero-downtime deployments",
                       image: rollingUpdateAnimation,
-                      duration: "2 min",
-                      difficulty: "Beginner",
                       topics: ["Deployments", "ReplicaSets", "Pod Lifecycle"]
                     },
                     {
                       title: "Service Discovery",
                       description: "See how services connect and discover each other",
                       image: serviceMeshConcept,
-                      duration: "3 min", 
-                      difficulty: "Intermediate",
                       topics: ["Services", "Endpoints", "DNS"]
                     }
                   ].map((concept, index) => (
@@ -384,14 +379,8 @@ export const InteractivePlayground = () => {
                             alt={concept.title}
                             className="w-full h-48 object-cover"
                           />
-                          <div className="absolute top-4 right-4 flex gap-2">
-                            <Badge variant="secondary" className="bg-background/80">
-                              <Clock className="w-3 h-3 mr-1" />
-                              {concept.duration}
-                            </Badge>
-                            <Badge variant="outline" className="bg-background/80">
-                              {concept.difficulty}
-                            </Badge>
+                          <div className="absolute top-4 right-4">
+                            {/* Duration and difficulty badges removed */}
                           </div>
                         </div>
                         <div className="p-6">
@@ -461,7 +450,6 @@ export const InteractivePlayground = () => {
                       <div className="md:w-1/2 p-8">
                         <div className="flex items-center gap-2 mb-4">
                           <Badge className="bg-tech-green text-black">Featured Scenario</Badge>
-                          <Badge variant="outline">Advanced</Badge>
                         </div>
                         <h4 className="text-2xl font-bold mb-4">Production Deployment Pipeline</h4>
                         <p className="text-muted-foreground mb-6">
@@ -497,27 +485,27 @@ export const InteractivePlayground = () => {
                       category: "Deployment & Scaling",
                       icon: Zap,
                       scenarios: [
-                        { title: "Deploy a Web Application", difficulty: "Beginner", duration: "15 min" },
-                        { title: "Blue-Green Deployment", difficulty: "Intermediate", duration: "25 min" },
-                        { title: "Canary Releases", difficulty: "Advanced", duration: "35 min" }
+                        { title: "Deploy a Web Application" },
+                        { title: "Blue-Green Deployment" },
+                        { title: "Canary Releases" }
                       ]
                     },
                     {
                       category: "Monitoring & Debugging",
                       icon: Monitor,
                       scenarios: [
-                        { title: "Troubleshoot Pod Issues", difficulty: "Beginner", duration: "20 min" },
-                        { title: "Performance Optimization", difficulty: "Intermediate", duration: "30 min" },
-                        { title: "Multi-Cluster Monitoring", difficulty: "Advanced", duration: "45 min" }
+                        { title: "Troubleshoot Pod Issues" },
+                        { title: "Performance Optimization" },
+                        { title: "Multi-Cluster Monitoring" }
                       ]
                     },
                     {
                       category: "Security & Compliance",
                       icon: Shield,
                       scenarios: [
-                        { title: "RBAC Configuration", difficulty: "Intermediate", duration: "25 min" },
-                        { title: "Network Policies", difficulty: "Intermediate", duration: "30 min" },
-                        { title: "Secret Management", difficulty: "Advanced", duration: "40 min" }
+                        { title: "RBAC Configuration" },
+                        { title: "Network Policies" },
+                        { title: "Secret Management" }
                       ]
                     }
                   ].map((category, categoryIndex) => (
@@ -531,17 +519,10 @@ export const InteractivePlayground = () => {
                       <CardContent className="space-y-4">
                         {category.scenarios.map((scenario, scenarioIndex) => (
                           <div key={scenarioIndex} className="border border-border/30 rounded-lg p-4 hover:bg-muted/20 transition-colors">
-                            <div className="flex justify-between items-start mb-2">
+                            <div className="mb-2">
                               <h4 className="font-semibold text-sm">{scenario.title}</h4>
-                              <Badge variant="outline" className="text-xs">
-                                {scenario.difficulty}
-                              </Badge>
                             </div>
-                            <div className="flex justify-between items-center">
-                              <span className="text-xs text-muted-foreground flex items-center gap-1">
-                                <Clock className="w-3 h-3" />
-                                {scenario.duration}
-                              </span>
+                            <div className="flex justify-end items-center">
                               <Button size="sm" variant="ghost" className="h-8 px-3 text-xs">
                                 Start
                               </Button>

@@ -9,7 +9,6 @@ import {
   Settings, 
   Terminal, 
   Layers, 
-  Clock, 
   Zap,
   Shield,
   Search,
@@ -35,8 +34,6 @@ const modules = [
     title: "Kubernetes Fundamentals",
     description: "Master the core concepts and architecture",
     icon: BookOpen,
-    duration: "2-3 hours",
-    difficulty: "Beginner",
     topics: [
       "What are Containers?", 
       "Container vs VMs", 
@@ -60,8 +57,6 @@ const modules = [
     title: "Core Kubernetes Objects",
     description: "Deep dive into Pods, Services, and Deployments",
     icon: Layers,
-    duration: "3-4 hours",
-    difficulty: "Intermediate",
     topics: [
       "Pods Lifecycle", 
       "Deployments & ReplicaSets", 
@@ -85,8 +80,6 @@ const modules = [
     title: "kubectl Command Mastery",
     description: "Become proficient with the Kubernetes CLI",
     icon: Terminal,
-    duration: "2 hours",
-    difficulty: "Beginner",
     topics: [
       "Basic Commands", 
       "Resource Management", 
@@ -110,8 +103,7 @@ const modules = [
     title: "Advanced Topics",
     description: "Scaling, monitoring, and production practices",
     icon: Settings,
-    duration: "4-5 hours",
-    difficulty: "Advanced",
+    // duration and difficulty fields removed
     topics: [
       "Horizontal Pod Autoscaling", 
       "Persistent Storage", 
@@ -232,7 +224,7 @@ const advancedTopics = [
     id: "networking",
     title: "Networking & Ingress",
     icon: Network,
-    difficulty: "Advanced",
+    // difficulty field removed,
     description: "CNI, Service Mesh, Ingress Controllers",
     color: "from-primary to-electric-blue",
     subtopics: [
@@ -247,7 +239,7 @@ const advancedTopics = [
     id: "storage",
     title: "Persistent Storage",
     icon: Database,
-    difficulty: "Intermediate",
+    // difficulty field removed,
     description: "PVs, PVCs, Storage Classes",
     color: "from-accent to-cyber-purple",
     subtopics: [
@@ -262,7 +254,7 @@ const advancedTopics = [
     id: "security",
     title: "Security & RBAC",
     icon: Shield,
-    difficulty: "Advanced",
+    // difficulty field removed,
     description: "Security best practices and access control",
     color: "from-tech-green to-primary",
     subtopics: [
@@ -277,7 +269,7 @@ const advancedTopics = [
     id: "monitoring",
     title: "Monitoring & Logging",
     icon: Monitor,
-    difficulty: "Intermediate",
+    // difficulty field removed,
     description: "Observability and debugging",
     color: "from-cyber-purple to-accent",
     subtopics: [
@@ -319,7 +311,6 @@ const troubleshootingGuides = [
   {
     title: "Pod Stuck in Pending State",
     category: "Pod Issues",
-    difficulty: "Beginner",
     symptoms: ["Pod shows Pending status", "Events show scheduling issues"],
     commonCauses: [
       "Insufficient cluster resources",
@@ -337,7 +328,6 @@ const troubleshootingGuides = [
   {
     title: "Service Not Accessible",
     category: "Networking",
-    difficulty: "Intermediate", 
     symptoms: ["Cannot connect to service", "Connection timeouts"],
     commonCauses: [
       "Incorrect service selector",
@@ -354,11 +344,7 @@ const troubleshootingGuides = [
   }
 ];
 
-const difficultyColors = {
-  "Beginner": "bg-tech-green/20 text-tech-green border-tech-green/30",
-  "Intermediate": "bg-primary/20 text-primary border-primary/30", 
-  "Advanced": "bg-accent/20 text-accent border-accent/30"
-};
+// Removed difficultyColors object as part of duration and difficulty removal
 
 const categoryColors = {
   "Get Resources": "bg-primary/20 text-primary",
@@ -451,13 +437,7 @@ export const StructuredLearningPath = () => {
               </h3>
               <p className="text-lg text-muted-foreground">Master the core concepts and architecture</p>
               <div className="flex items-center justify-center gap-3 mt-4">
-                <Badge variant="outline" className={difficultyColors["Beginner"]}>
-                  Beginner
-                </Badge>
-                <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                  <Clock className="w-4 h-4" />
-                  2-3 hours
-                </div>
+                {/* Removed difficulty badge and duration display */}
               </div>
             </div>
             
@@ -509,13 +489,7 @@ export const StructuredLearningPath = () => {
               </h3>
               <p className="text-lg text-muted-foreground">Deep dive into Pods, Services, and Deployments</p>
               <div className="flex items-center justify-center gap-3 mt-4">
-                <Badge variant="outline" className={difficultyColors["Intermediate"]}>
-                  Intermediate
-                </Badge>
-                <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                  <Clock className="w-4 h-4" />
-                  3-4 hours
-                </div>
+                {/* Removed difficulty badge and duration display */}
               </div>
             </div>
             
@@ -578,9 +552,7 @@ export const StructuredLearningPath = () => {
                                       <Badge variant="secondary" className="text-xs">
                                         {guide.category}
                                       </Badge>
-                                      <Badge className={difficultyColors[guide.difficulty as keyof typeof difficultyColors]}>
-                                        {guide.difficulty}
-                                      </Badge>
+                                      {/* Removed difficulty badge */}
                                     </div>
                                   </div>
                                 </div>
@@ -659,15 +631,7 @@ export const StructuredLearningPath = () => {
                 kubectl Command Mastery
               </h3>
               <p className="text-lg text-muted-foreground">Become proficient with the Kubernetes CLI</p>
-              <div className="flex items-center justify-center gap-3 mt-4">
-                <Badge variant="outline" className={difficultyColors["Beginner"]}>
-                  Beginner
-                </Badge>
-                <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                  <Clock className="w-4 h-4" />
-                  2 hours
-                </div>
-              </div>
+              {/* Removed difficulty badge and duration display */}
             </div>
             
             <Card className="card-gradient border-border/50">
@@ -850,15 +814,7 @@ export const StructuredLearningPath = () => {
                 Advanced Topics
               </h3>
               <p className="text-lg text-muted-foreground">Scaling, monitoring, and production practices</p>
-              <div className="flex items-center justify-center gap-3 mt-4">
-                <Badge variant="outline" className={difficultyColors["Advanced"]}>
-                  Advanced
-                </Badge>
-                <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                  <Clock className="w-4 h-4" />
-                  4-5 hours
-                </div>
-              </div>
+              {/* Removed difficulty badge and duration display */}
             </div>
             
             <Card className="card-gradient border-border/50">
@@ -880,9 +836,7 @@ export const StructuredLearningPath = () => {
                                 <div className="text-left">
                                   <CardTitle className="text-lg">{topic.title}</CardTitle>
                                   <p className="text-sm text-muted-foreground">{topic.description}</p>
-                                  <Badge className={difficultyColors[topic.difficulty as keyof typeof difficultyColors]} variant="outline">
-                                    {topic.difficulty}
-                                  </Badge>
+                                  {/* Removed difficulty badge */}
                                 </div>
                               </div>
                               <ChevronDown className="w-5 h-5 transition-transform" style={{ 

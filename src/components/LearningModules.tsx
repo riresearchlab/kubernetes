@@ -9,7 +9,6 @@ import {
   Terminal, 
   Layers, 
   ChevronRight, 
-  Clock, 
   Users,
   Zap,
   Shield,
@@ -22,8 +21,6 @@ const modules = [
     title: "Kubernetes Fundamentals",
     description: "Master the core concepts and architecture",
     icon: BookOpen,
-    duration: "2-3 hours",
-    difficulty: "Beginner",
     topics: [
       "What are Containers?", 
       "Container vs VMs", 
@@ -38,8 +35,6 @@ const modules = [
     title: "Core Kubernetes Objects",
     description: "Deep dive into Pods, Services, and Deployments",
     icon: Layers,
-    duration: "3-4 hours",
-    difficulty: "Intermediate",
     topics: [
       "Pods Lifecycle", 
       "Deployments & ReplicaSets", 
@@ -54,8 +49,6 @@ const modules = [
     title: "kubectl Command Mastery",
     description: "Become proficient with the Kubernetes CLI",
     icon: Terminal,
-    duration: "2 hours",
-    difficulty: "Beginner",
     topics: [
       "Basic Commands", 
       "Resource Management", 
@@ -70,8 +63,6 @@ const modules = [
     title: "Advanced Topics",
     description: "Scaling, monitoring, and production practices",
     icon: Settings,
-    duration: "4-5 hours",
-    difficulty: "Advanced",
     topics: [
       "Horizontal Pod Autoscaling", 
       "Persistent Storage", 
@@ -83,11 +74,7 @@ const modules = [
   }
 ];
 
-const difficultyColors = {
-  "Beginner": "bg-tech-green/20 text-tech-green border-tech-green/30",
-  "Intermediate": "bg-primary/20 text-primary border-primary/30", 
-  "Advanced": "bg-accent/20 text-accent border-accent/30"
-};
+// Difficulty colors removed
 
 export const LearningModules = () => {
   const [activeModule, setActiveModule] = useState("fundamentals");
@@ -140,15 +127,7 @@ export const LearningModules = () => {
                         <p className="text-lg text-muted-foreground">{module.description}</p>
                       </div>
                       
-                      <div className="flex items-center gap-3">
-                        <Badge variant="outline" className={difficultyColors[module.difficulty as keyof typeof difficultyColors]}>
-                          {module.difficulty}
-                        </Badge>
-                        <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                          <Clock className="w-4 h-4" />
-                          {module.duration}
-                        </div>
-                      </div>
+                      {/* Difficulty and duration badges removed */}
                     </div>
                   </CardHeader>
 
