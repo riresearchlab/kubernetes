@@ -39,8 +39,8 @@ export const Hero = () => {
               {/* Main heading */}
               <div className="space-y-4">
                 <h1 className="text-5xl lg:text-7xl font-bold leading-tight">
-                  Master{" "}
-                  <span className="gradient-text">Kubernetes</span>
+                  Kubernetes{" "}
+                  <span className="gradient-text">Bioscope</span>
                 </h1>
                 <p className="text-xl lg:text-2xl text-muted-foreground font-light leading-relaxed">
                   Your path to cloud-native excellence with interactive tutorials, 
