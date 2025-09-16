@@ -625,29 +625,6 @@ export const StructuredLearningPath = () => {
                   ))}
                 </div>
 
-                <div className="space-y-4">
-                  <h4 className="text-lg font-semibold">Interactive Labs</h4>
-                  <div className="grid md:grid-cols-2 gap-6">
-                    {modules[1].interactive.map((feature, index) => (
-                      <Card key={index} className="card-gradient border-border/50 hover-lift cursor-pointer">
-                        <CardContent className="p-6">
-                          <div className="space-y-4">
-                            <div className="flex items-center gap-3">
-                              <div className="w-3 h-3 bg-accent rounded-full animate-pulse" />
-                              <h4 className="font-semibold">{feature}</h4>
-                            </div>
-                            <div className="h-24 bg-gradient-to-r from-primary/10 to-accent/10 rounded-lg border border-primary/20 flex items-center justify-center">
-                              <Play className="w-8 h-8 text-primary" />
-                            </div>
-                            <Button variant="outline" className="w-full">
-                              Launch {feature}
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                </div>
 
                 <div className="space-y-4">
                   <h4 className="text-lg font-semibold">Troubleshooting Guides</h4>
@@ -967,7 +944,7 @@ export const StructuredLearningPath = () => {
                                 {topic.subtopics.map((subtopic, index) => (
                                   <div 
                                     key={index} 
-                                    className="flex items-center gap-3 p-3 rounded-lg border border-border/30 hover:bg-muted/30 transition-colors cursor-pointer"
+                                    className="group/item p-3 terminal rounded-lg text-xs text-center hover:bg-gradient-to-r hover:from-primary/20 hover:to-accent/20 transition-all duration-300 cursor-pointer border border-transparent hover:border-primary/30 hover:shadow-lg hover:scale-105 transform relative overflow-hidden"
                                     onClick={() => openModal(topic.id, subtopic)}
                                   >
                                     <div className="w-2 h-2 bg-primary rounded-full" />
