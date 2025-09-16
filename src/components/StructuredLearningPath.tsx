@@ -859,12 +859,12 @@ export const StructuredLearningPath = () => {
                       <div className="space-y-4">
                         <div className="terminal p-6 rounded-lg border border-border/30 min-h-[400px]">
                           <div className="flex items-center gap-2 mb-4">
-                            <div className="flex gap-1">
-                              <div className="w-3 h-3 bg-destructive rounded-full" />
-                              <div className="w-3 h-3 bg-orange rounded-full" />
-                              <div className="w-3 h-3 bg-tech-green rounded-full" />
+                            <div className="flex gap-2">
+                              <div className="w-3 h-3 bg-red-500 rounded-full" />
+                              <div className="w-3 h-3 bg-yellow-500 rounded-full" />
+                              <div className="w-3 h-3 bg-green-500 rounded-full" />
                             </div>
-                            <span className="text-xs text-muted-foreground">kubectl-terminal</span>
+                            <span className="text-2xl font-bold text-white">kubectl-terminal</span>
                           </div>
                           
                           {history.map((cmd, index) => (
