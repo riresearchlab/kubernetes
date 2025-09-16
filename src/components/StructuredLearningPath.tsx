@@ -514,7 +514,7 @@ export const StructuredLearningPath = () => {
   };
 
   return (
-    <section className="py-24 relative">
+    <section id="learning-path" className="py-24 relative">
       {/* Modal component */}
       {modalData && (
         <AdvancedTopicsModal

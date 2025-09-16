@@ -983,7 +983,7 @@ export const KubernetesFundamentals = () => {
   }, [demoState, isAnimating, demoSteps.length]);
 
   return (
-    <section className="py-24 relative">
+    <section id="fundamentals" className="py-24 relative">
       <div className="container px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto text-center mb-16">
           <h2 className="text-3xl lg:text-5xl font-bold mb-6">

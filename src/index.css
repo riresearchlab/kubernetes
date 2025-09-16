@@ -11,6 +11,26 @@
   }
 }
 
+/* Navigation styles */
+@layer components {
+  .nav-link-hover {
+    @apply relative overflow-hidden;
+  }
+  
+  .nav-link-hover::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300;
+  }
+  
+  .nav-link-hover:hover::after {
+    @apply w-full;
+  }
+  
+  .nav-link-active::after {
+    @apply w-full;
+  }
+}
+
 /* Kubernetes Bioscope Design System - Modern Kubernetes Learning Platform */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
@@ -198,6 +218,11 @@
   .animate-slide-up {
     animation: slideUp 0.5s ease-out;
   }
+  
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out forwards;
+    opacity: 0;
+  }
 }
 
 @layer utilities {
@@ -232,6 +257,17 @@
   from {
     opacity: 0;
     transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
   }
   to {
     opacity: 1;

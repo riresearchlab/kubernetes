@@ -12,7 +12,7 @@ import {
 
 export const Footer = () => {
   return (
-    <footer className="relative border-t border-border/50 bg-gradient-to-r from-card to-muted/30">
+    <footer id="footer" className="relative border-t border-border/50 bg-gradient-to-r from-card to-muted/30">
       <div className="container px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid lg:grid-cols-4 gap-12">
           {/* Brand section */}
