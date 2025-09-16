@@ -2,15 +2,14 @@ import { useState, useEffect, useRef } from "react";
 import { Navigation } from "./Navigation";
 
 export const NavigationWrapper = () => {
-  const [activeSection, setActiveSection] = useState("hero");
+  const [activeSection, setActiveSection] = useState("home");
   const observerRefs = useRef<IntersectionObserver[]>([]);
 
   // Define sections to be included in navigation
   const sections = [
-    { id: "hero", name: "Home" },
+    { id: "home", name: "Home" },
     { id: "fundamentals", name: "Fundamentals" },
     { id: "learning-path", name: "Learning Path" },
-    { id: "footer", name: "Contact" },
   ];
 
   useEffect(() => {

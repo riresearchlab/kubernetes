@@ -573,20 +573,6 @@ export const StructuredLearningPath = () => {
                     </div>
                   </div>
 
-                  <div className="space-y-4">
-                    <h4 className="text-lg font-semibold flex items-center gap-2">
-                      <Zap className="w-5 h-5 text-accent" />
-                      Interactive Features
-                    </h4>
-                    <div className="space-y-2">
-                      {modules[0].interactive.map((feature, index) => (
-                        <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r from-accent/10 to-primary/10 border border-accent/20 cursor-pointer hover:bg-gradient-to-r hover:from-accent/20 hover:to-primary/20 transition-all">
-                          <div className="w-2 h-2 bg-accent rounded-full animate-pulse" />
-                          <span className="text-sm">{feature}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
                 </div>
               </CardContent>
             </Card>
