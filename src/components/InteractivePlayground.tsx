@@ -241,37 +241,44 @@ export const InteractivePlayground = () => {
                             <span className="text-cyan-400">admin@ubuntu:~$</span>
                             <span className="text-white">{item.command}</span>
                           </div>
-                          <div className="mt-1 text-green-400 whitespace-pre-wrap">
-                            {item.output}
-                          </div>
+                          {item.output === "Executing command..." && isLoading && index === history.length - 1 ? (
+                            <div className="flex items-center gap-2 text-yellow-400 mt-1">
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                                <span>{item.output}</span>
+                            </div>
+                          ) : (
+                            <div className="mt-1 text-green-400 whitespace-pre-wrap">
+                                {item.output}
+                            </div>
+                          )}
                         </div>
                       ))}
-                      
-                      {isLoading && history[history.length - 1]?.output === "Executing command..." && (
-                        <div className="flex items-center gap-2 text-yellow-400">
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                          <span>Executing command...</span>
-                        </div>
-                      )}
                       
                       {/* Current command line */}
                       <div className="flex items-center gap-2">
                         <span className="text-cyan-400">admin@ubuntu:~$</span>
-                        <input
-                          ref={inputRef}
-                          type="text"
-                          value={command}
-                          onChange={(e) => setCommand(e.target.value)}
-                          placeholder=""
-                          className="bg-transparent text-white outline-none border-none w-full font-mono"
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                              handleCommandSubmit();
-                            }
-                          }}
-                          disabled={isLoading}
-                          autoFocus
-                        />
+                        <div className="flex-1 relative">
+                          <input
+                            ref={inputRef}
+                            type="text"
+                            value={command}
+                            onChange={(e) => setCommand(e.target.value)}
+                            placeholder=""
+                            className="bg-transparent text-white outline-none border-none w-full font-mono"
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                handleCommandSubmit();
+                              }
+                            }}
+                            disabled={isLoading}
+                            autoFocus
+                          />
+                          {!isLoading && (
+                            <span className="absolute top-0 left-0 w-2 h-5 bg-white animate-pulse" style={{
+                                left: `${command.length * 0.6}rem`
+                            }} />
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
