@@ -27,6 +27,13 @@ import {
   Loader2
 } from "lucide-react";
 
+// Import modal component and data
+import { AdvancedTopicsModal } from "@/components/AdvancedTopicsModal";
+import { networkingData } from "@/data/advancedTopics/networkingData";
+import { storageData } from "@/data/advancedTopics/storageData";
+import { securityData } from "@/data/advancedTopics/securityData";
+import { monitoringData } from "@/data/advancedTopics/monitoringData";
+
 // Learning modules data
 const modules = [
   {
@@ -367,6 +374,12 @@ export const StructuredLearningPath = () => {
   const [output, setOutput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [history, setHistory] = useState<string[]>([]);
+  
+  // Add modal state
+  const [modalOpen, setModalOpen] = useState(false);
+  const [currentTopic, setCurrentTopic] = useState("");
+  const [currentSubtopic, setCurrentSubtopic] = useState("");
+  const [modalData, setModalData] = useState<any>(null);
 
   const toggleAdvancedTopic = (topicId: string) => {
     setActiveAdvancedTopics(prev => 
@@ -409,8 +422,109 @@ export const StructuredLearningPath = () => {
     navigator.clipboard.writeText(cmd);
   };
 
+  const openModal = (topic: string, subtopic: string) => {
+    let data;
+    
+    // Select the appropriate data based on topic and subtopic
+    switch (topic) {
+      case "networking":
+        switch (subtopic) {
+          case "Pod Networking (CNI)":
+            data = networkingData.podNetworking;
+            break;
+          case "Service Types & Load Balancing":
+            data = networkingData.serviceTypes;
+            break;
+          case "Ingress Controllers (Nginx, Traefik)":
+            data = networkingData.ingressControllers;
+            break;
+          case "Network Policies":
+            data = networkingData.networkPolicies;
+            break;
+          case "Service Mesh (Istio, Linkerd)":
+            data = networkingData.serviceMesh;
+            break;
+        }
+        break;
+      case "storage":
+        switch (subtopic) {
+          case "Persistent Volumes (PV)":
+            data = storageData.persistentVolumes;
+            break;
+          case "Persistent Volume Claims (PVC)":
+            data = storageData.persistentVolumeClaims;
+            break;
+          case "Storage Classes":
+            data = storageData.storageClasses;
+            break;
+          case "Dynamic Provisioning":
+            data = storageData.dynamicProvisioning;
+            break;
+          case "StatefulSet Storage":
+            data = storageData.statefulSetStorage;
+            break;
+        }
+        break;
+      case "security":
+        switch (subtopic) {
+          case "Role-Based Access Control (RBAC)":
+            data = securityData.rbac;
+            break;
+          case "Pod Security Standards":
+            data = securityData.podSecurity;
+            break;
+          case "Network Policies":
+            data = securityData.networkPolicies;
+            break;
+          case "Secrets Management":
+            data = securityData.secretsManagement;
+            break;
+          case "Security Scanning":
+            data = securityData.securityScanning;
+            break;
+        }
+        break;
+      case "monitoring":
+        switch (subtopic) {
+          case "Prometheus & Grafana":
+            data = monitoringData.prometheusGrafana;
+            break;
+          case "Centralized Logging":
+            data = monitoringData.centralizedLogging;
+            break;
+          case "Distributed Tracing":
+            data = monitoringData.distributedTracing;
+            break;
+          case "Resource Monitoring":
+            data = monitoringData.resourceMonitoring;
+            break;
+          case "Alert Management":
+            data = monitoringData.alertManagement;
+            break;
+        }
+        break;
+    }
+
+    if (data) {
+      setCurrentTopic(topic);
+      setCurrentSubtopic(subtopic);
+      setModalData(data);
+      setModalOpen(true);
+    }
+  };
+
   return (
     <section className="py-24 relative">
+      {/* Modal component */}
+      {modalData && (
+        <AdvancedTopicsModal
+          open={modalOpen}
+          onOpenChange={setModalOpen}
+          topic={currentTopic}
+          subtopic={currentSubtopic}
+          data={modalData}
+        />
+      )}
       <div className="container px-4 sm:px-6 lg:px-8">
         {/* Section header */}
         <div className="max-w-3xl mx-auto text-center mb-16">
@@ -851,7 +965,11 @@ export const StructuredLearningPath = () => {
                               <h4 className="font-medium">Subtopics</h4>
                               <div className="grid gap-2">
                                 {topic.subtopics.map((subtopic, index) => (
-                                  <div key={index} className="flex items-center gap-3 p-3 rounded-lg border border-border/30 hover:bg-muted/30 transition-colors cursor-pointer">
+                                  <div 
+                                    key={index} 
+                                    className="flex items-center gap-3 p-3 rounded-lg border border-border/30 hover:bg-muted/30 transition-colors cursor-pointer"
+                                    onClick={() => openModal(topic.id, subtopic)}
+                                  >
                                     <div className="w-2 h-2 bg-primary rounded-full" />
                                     <span className="text-sm">{subtopic}</span>
                                   </div>
