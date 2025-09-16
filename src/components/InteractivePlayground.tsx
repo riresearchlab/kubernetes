@@ -2,26 +2,21 @@ import { useState, useRef, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { 
   Terminal, 
   Play, 
-  RotateCcw, 
-  Copy, 
   CheckCircle, 
-  AlertCircle,
   Loader2,
   Box,
   Eye,
-  Code,
-  Zap,
   GitBranch,
   Monitor,
   Users,
   Shield,
   Target,
-  TrendingUp
+  TrendingUp,
+  Zap
 } from "lucide-react";
 import clusterVisualization from "@/assets/cluster-3d-visualization.jpg";
 import rollingUpdateAnimation from "@/assets/rolling-update-animation.jpg";
@@ -84,7 +79,7 @@ export const InteractivePlayground = () => {
 
   useEffect(() => {
     inputRef.current?.focus();
-  }, []);
+  }, [activeTab]);
 
   const executeCommand = async (cmdToExecute: string) => {
     if (!cmdToExecute.trim() || isLoading) return;
@@ -115,7 +110,6 @@ export const InteractivePlayground = () => {
   };
 
   const handleQuickCommand = (cmd: string) => {
-    setCommand(cmd);
     executeCommand(cmd);
   };
 
