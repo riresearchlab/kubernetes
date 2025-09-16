@@ -277,17 +277,47 @@ const sampleCommands = [
 ];
 
 const commandOutputs = {
-  "kubectl get pods": `NAME                     READY   STATUS    RESTARTS   AGE
-nginx-deployment-1       1/1     Running   0          2m
-web-app-2               1/1     Running   0          1m
-api-service-3           1/1     Running   0          3m`,
-  "kubectl get nodes": `NAME           STATUS   ROLES           AGE   VERSION
-control-plane  Ready    control-plane   1d    v1.28.0
-worker-1       Ready    <none>          1d    v1.28.0
-worker-2       Ready    <none>          1d    v1.28.0`,
-  "kubectl get services": `NAME         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
+  "kubectl get pods": `NAME                  READY   STATUS    RESTARTS   AGE
+nginx-deployment-1    1/1     Running   0          2m
+web-app-2             1/1     Running   0          1m
+api-service-3         1/1     Running   0          3m`,
+  "kubectl get nodes": `NAME            STATUS   ROLES           AGE   VERSION
+control-plane   Ready    control-plane   1d    v1.28.0
+worker-1        Ready    <none>          1d    v1.28.0
+worker-2        Ready    <none>          1d    v1.28.0`,
+  "kubectl get services": `NAME         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
 kubernetes   ClusterIP   10.96.0.1       <none>        443/TCP   1d
-nginx-svc    ClusterIP   10.96.1.100     <none>        80/TCP    2m`
+nginx-svc    ClusterIP   10.96.1.100     <none>        80/TCP    2m`,
+  "kubectl describe pod nginx-deployment-1": `Name:         nginx-deployment-1
+Namespace:    default
+Priority:     0
+Node:         worker-1/192.168.1.101
+Start Time:   Wed, 17 Sep 2025 01:47:52 +0600
+Labels:       app=nginx
+Annotations:  <none>
+Status:       Running
+IP:           10.244.1.4
+Containers:
+  nginx:
+    Container ID:  containerd://12345abcdef67890
+    Image:         nginx:1.25
+    Port:          80/TCP
+    Host Port:     0/TCP
+    State:         Running
+      Started:     Wed, 17 Sep 2025 01:47:53 +0600
+    Ready:         True
+    Restart Count: 0
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  2m    default-scheduler  Successfully assigned default/nginx-deployment-1 to worker-1
+  Normal  Pulling    2m    kubelet            Pulling image "nginx:1.25"
+  Normal  Pulled     2m    kubelet            Successfully pulled image "nginx:1.25"
+  Normal  Created    2m    kubelet            Created container nginx
+  Normal  Started    2m    kubelet            Started container nginx`,
+  "kubectl apply -f deployment.yaml": `deployment.apps/nginx-deployment created`,
+  "kubectl logs nginx-pod": `127.0.0.1 - - [17/Sep/2025:01:48:10 +0600] "GET / HTTP/1.1" 200 612 "-" "curl/7.81.0" "-"
+127.0.0.1 - - [17/Sep/2025:01:48:35 +0600] "GET /index.html HTTP/1.1" 200 612 "-" "Mozilla/5.0" "-"`
 };
 
 // Troubleshooting guides

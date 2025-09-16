@@ -76,6 +76,7 @@ export const Navigation = ({ sections, activeSection }: NavigationProps) => {
       <div className="container px-4 mx-auto flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center">
+          <img src="favicon.ico" alt="Kubernetes Bioscope Icon" className="w-6 h-6 mr-2" />
           <span className="text-xl font-bold gradient-text">Kubernetes Bioscope</span>
         </div>
 
