@@ -37,29 +37,6 @@ import { monitoringData } from "@/data/advancedTopics/monitoringData";
 // Learning modules data
 const modules = [
   {
-    id: "fundamentals",
-    title: "Kubernetes Fundamentals",
-    description: "Master the core concepts and architecture",
-    icon: BookOpen,
-    topics: [
-      "What are Containers?", 
-      "Container vs VMs", 
-      "Introduction to Orchestration", 
-      "Kubernetes Architecture",
-      "Cluster Components"
-    ],
-    interactive: ["3D Cluster Tour", "Container Comparison Tool", "Architecture Simulator"],
-    detailedContent: {
-      overview: "Learn the fundamental concepts that power Kubernetes orchestration",
-      prerequisites: ["Basic understanding of Linux", "Familiarity with command line"],
-      learningOutcomes: [
-        "Understand containerization vs virtualization",
-        "Identify Kubernetes architecture components",
-        "Navigate cluster hierarchy and organization"
-      ]
-    }
-  },
-  {
     id: "core-concepts",
     title: "Core Kubernetes Objects",
     description: "Deep dive into Pods, Services, and Deployments",
@@ -540,43 +517,6 @@ export const StructuredLearningPath = () => {
 
         {/* Learning Modules - Vertical Layout */}
         <div className="max-w-7xl mx-auto space-y-16">
-          {/* Kubernetes Fundamentals Module */}
-          <div className="space-y-8">
-            <div className="text-center">
-              <h3 className="text-2xl font-bold mb-4 flex items-center justify-center gap-3">
-                <div className="p-2 bg-gradient-primary rounded-lg">
-                  <BookOpen className="w-6 h-6 text-white" />
-                </div>
-                Kubernetes Fundamentals
-              </h3>
-              <p className="text-lg text-muted-foreground">Master the core concepts and architecture</p>
-              <div className="flex items-center justify-center gap-3 mt-4">
-                {/* Removed difficulty badge and duration display */}
-              </div>
-            </div>
-            
-            <Card className="card-gradient border-border/50">
-              <CardContent className="p-8">
-                <div className="grid lg:grid-cols-2 gap-8">
-                  <div className="space-y-4">
-                    <h4 className="text-lg font-semibold flex items-center gap-2">
-                      <BookOpen className="w-5 h-5 text-primary" />
-                      Learning Topics
-                    </h4>
-                    <div className="space-y-2">
-                      {modules[0].topics.map((topic, index) => (
-                        <div key={index} className="flex items-center gap-3 p-3 rounded-lg border border-border/30 hover:bg-muted/30 transition-colors cursor-pointer">
-                          <div className="w-2 h-2 bg-primary rounded-full" />
-                          <span className="text-sm">{topic}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                </div>
-              </CardContent>
-            </Card>
-          </div>
 
           {/* Core Kubernetes Objects Module */}
           <div className="space-y-8">

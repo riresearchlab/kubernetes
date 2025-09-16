@@ -17,22 +17,7 @@ import {
 } from "lucide-react";
 
 const modules = [
-  {
-    id: "fundamentals",
-    title: "Kubernetes Fundamentals",
-    description: "Master the core concepts and architecture",
-    icon: BookOpen,
-    duration: "2-3 hours",
-    difficulty: "Beginner",
-    topics: [
-      "What are Containers?", 
-      "Container vs VMs", 
-      "Introduction to Orchestration", 
-      "Kubernetes Architecture",
-      "Cluster Components"
-    ],
-    interactive: ["3D Cluster Tour", "Container Comparison Tool", "Architecture Simulator"]
-  },
+
   {
     id: "core-concepts",
     title: "Core Kubernetes Objects",
@@ -152,52 +137,7 @@ export const LearningModules = () => {
                     </div>
                   </CardHeader>
 
-                  <CardContent className="space-y-8">
-                    <div className="grid lg:grid-cols-2 gap-8">
-                      {/* Topics */}
-                      <div className="space-y-4">
-                        <h4 className="text-lg font-semibold flex items-center gap-2">
-                          <BookOpen className="w-5 h-5 text-primary" />
-                          Learning Topics
-                        </h4>
-                        <div className="space-y-2">
-                          {module.topics.map((topic, index) => (
-                            <div key={index} className="flex items-center gap-3 p-3 rounded-lg border border-border/30 hover:bg-muted/30 transition-colors">
-                              <div className="w-2 h-2 bg-primary rounded-full" />
-                              <span className="text-sm">{topic}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
 
-                      {/* Interactive features */}
-                      <div className="space-y-4">
-                        <h4 className="text-lg font-semibold flex items-center gap-2">
-                          <Zap className="w-5 h-5 text-accent" />
-                          Interactive Features
-                        </h4>
-                        <div className="space-y-2">
-                          {module.interactive.map((feature, index) => (
-                            <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r from-accent/10 to-primary/10 border border-accent/20">
-                              <div className="w-2 h-2 bg-accent rounded-full animate-pulse" />
-                              <span className="text-sm">{feature}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* CTA */}
-                    <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-border/50">
-                      <Button className="group bg-gradient-primary text-white hover:shadow-glow transition-all duration-300">
-                        Start Module
-                        <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                      </Button>
-                      <Button variant="outline" className="border-primary/30 hover:border-primary hover:bg-primary/5">
-                        Preview Content
-                      </Button>
-                    </div>
-                  </CardContent>
                 </Card>
               </TabsContent>
             ))}
