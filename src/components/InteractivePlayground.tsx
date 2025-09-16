@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -63,31 +63,65 @@ web-app-svc  LoadBalancer 10.96.2.200    <pending>     80:30080/TCP  1m`,
 deployment "nginx" successfully rolled out`
 };
 
+interface HistoryItem {
+  command: string;
+  output: string;
+}
+
 export const InteractivePlayground = () => {
   const [activeTab, setActiveTab] = useState("terminal");
   const [command, setCommand] = useState("");
-  const [output, setOutput] = useState("");
+  const [history, setHistory] = useState<HistoryItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [history, setHistory] = useState<string[]>([]);
+  const terminalOutputRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const executeCommand = async () => {
-    if (!command.trim()) return;
+  useEffect(() => {
+    if (terminalOutputRef.current) {
+      terminalOutputRef.current.scrollTop = terminalOutputRef.current.scrollHeight;
+    }
+  }, [history, isLoading]);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  const executeCommand = async (cmdToExecute: string) => {
+    if (!cmdToExecute.trim() || isLoading) return;
+
     setIsLoading(true);
-    setHistory(prev => [...prev, command]);
+    setCommand("");
     
-    // Simulate command execution
+    const newHistoryItem: HistoryItem = {
+      command: cmdToExecute,
+      output: "Executing command...",
+    };
+    setHistory(prev => [...prev, newHistoryItem]);
+
     setTimeout(() => {
-      const result = commandOutputs[command as keyof typeof commandOutputs] || 
-        `${command} command not found or Unable to execute this command`;
-      setOutput(result);
+      const result = commandOutputs[cmdToExecute as keyof typeof commandOutputs] || 
+        `Error: command not found: ${cmdToExecute}`;
+      
+      setHistory(prev => prev.map((item, index) => 
+        index === prev.length - 1 ? { ...item, output: result } : item
+      ));
       setIsLoading(false);
+      inputRef.current?.focus();
     }, 1000);
   };
 
+  const handleCommandSubmit = () => {
+    executeCommand(command);
+  };
+
+  const handleQuickCommand = (cmd: string) => {
+    setCommand(cmd);
+    executeCommand(cmd);
+  };
+
   const clearTerminal = () => {
-    setOutput("");
-    setCommand("");
     setHistory([]);
+    setCommand("");
   };
 
   return (
@@ -141,7 +175,7 @@ export const InteractivePlayground = () => {
                           key={index}
                           variant="ghost"
                           className="w-full justify-start text-left font-mono text-sm hover:bg-primary/10"
-                          onClick={() => setCommand(cmd)}
+                          onClick={() => handleQuickCommand(cmd)}
                         >
                           {cmd}
                         </Button>
@@ -183,45 +217,38 @@ export const InteractivePlayground = () => {
                         <div className="w-3 h-3 bg-red-500 rounded-full" />
                         <div className="w-3 h-3 bg-yellow-500 rounded-full" />
                         <div className="w-3 h-3 bg-green-500 rounded-full" />
-                        <span className="ml-2 text-sm text-slate-300 font-medium">Kubernetes Terminal</span>
+                        <span className="ml-2 text-sm text-slate-300 font-medium">kubectl-terminal</span>
                       </div>
                       <Button 
                         size="sm" 
                         variant="ghost" 
                         onClick={clearTerminal}
-                        className="text-slate-300 hover:text-white hover:bg-slate-700 text-xs px-3 py-1 h-auto"
+                        className="text-slate-300 hover:text-white hover:bg-slate-700 text-xs px-3 py-1 h-auto w-[111px]"
                       >
                         Clear
                       </Button>
                     </div>
                     
                     {/* Terminal Content */}
-                    <div className="p-4 min-h-[400px] bg-slate-900 rounded-b-lg font-mono text-sm">
-                      {/* Command history */}
-                      {history.map((cmd, index) => (
+                    <div 
+                      ref={terminalOutputRef}
+                      className="p-4 h-[400px] bg-slate-900 rounded-b-lg font-mono text-sm overflow-y-auto"
+                      onClick={() => inputRef.current?.focus()}
+                    >
+                      {history.map((item, index) => (
                         <div key={index} className="mb-2">
                           <div className="flex items-center gap-2">
                             <span className="text-cyan-400">admin@ubuntu:~$</span>
-                            <span className="text-white">{cmd}</span>
+                            <span className="text-white">{item.command}</span>
                           </div>
-                          {commandOutputs[cmd as keyof typeof commandOutputs] && (
-                            <div className="mt-1 mb-3 text-green-400 whitespace-pre-line">
-                              {commandOutputs[cmd as keyof typeof commandOutputs]}
-                            </div>
-                          )}
+                          <div className="mt-1 text-green-400 whitespace-pre-wrap">
+                            {item.output}
+                          </div>
                         </div>
                       ))}
                       
-                      {/* Current output */}
-                      {output && !history.includes(command) && (
-                        <div className="mb-4 text-green-400 whitespace-pre-line">
-                          {output}
-                        </div>
-                      )}
-                      
-                      {/* Loading state */}
-                      {isLoading && (
-                        <div className="flex items-center gap-2 text-yellow-400 mb-4">
+                      {isLoading && history[history.length - 1]?.output === "Executing command..." && (
+                        <div className="flex items-center gap-2 text-yellow-400">
                           <Loader2 className="w-4 h-4 animate-spin" />
                           <span>Executing command...</span>
                         </div>
@@ -230,49 +257,22 @@ export const InteractivePlayground = () => {
                       {/* Current command line */}
                       <div className="flex items-center gap-2">
                         <span className="text-cyan-400">admin@ubuntu:~$</span>
-                        <div className="flex-1 relative">
-                          <input
-                            type="text"
-                            value={command}
-                            onChange={(e) => setCommand(e.target.value)}
-                            placeholder=""
-                            className="bg-transparent text-white outline-none border-none w-full font-mono"
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter') {
-                                executeCommand();
-                              }
-                            }}
-                            disabled={isLoading}
-                          />
-                          <span className="absolute top-0 left-0 w-2 h-5 bg-white animate-pulse" style={{
-                            left: `${command.length * 0.6}rem`
-                          }} />
-                        </div>
+                        <input
+                          ref={inputRef}
+                          type="text"
+                          value={command}
+                          onChange={(e) => setCommand(e.target.value)}
+                          placeholder=""
+                          className="bg-transparent text-white outline-none border-none w-full font-mono"
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              handleCommandSubmit();
+                            }
+                          }}
+                          disabled={isLoading}
+                          autoFocus
+                        />
                       </div>
-                    </div>
-                  </div>
-                  
-                  {/* Command input below terminal for mobile */}
-                  <div className="mt-4 lg:hidden">
-                    <div className="flex gap-2">
-                      <Input
-                        value={command}
-                        onChange={(e) => setCommand(e.target.value)}
-                        placeholder="Type kubectl command here..."
-                        className="font-mono bg-background/50"
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
-                            executeCommand();
-                          }
-                        }}
-                      />
-                      <Button 
-                        onClick={executeCommand} 
-                        disabled={!command.trim() || isLoading}
-                        className="bg-gradient-primary text-white"
-                      >
-                        <Play className="w-4 h-4" />
-                      </Button>
                     </div>
                   </div>
                 </div>
