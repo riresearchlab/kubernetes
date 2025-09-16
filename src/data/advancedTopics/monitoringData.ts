@@ -2,7 +2,7 @@
 
 export const monitoringData = {
   prometheusGrafana: {
-    title: "Prometheus & Grafana" as string,
+    title: "Prometheus & Grafana",
     description: "Monitoring and visualization for Kubernetes clusters",
     definition: "Prometheus is an open-source monitoring and alerting toolkit, while Grafana is a multi-platform analytics and interactive visualization web application. Together, they form a powerful monitoring solution for Kubernetes.",
     detailedDescription: "Prometheus collects metrics from configured targets at given intervals, evaluates rule expressions, displays results, and can trigger alerts when specified conditions are observed. It uses a pull-based model, scraping metrics endpoints exposed by applications and Kubernetes components. Grafana connects to Prometheus as a data source and provides rich visualization capabilities through customizable dashboards. The combination enables comprehensive monitoring of cluster health, application performance, and resource utilization, with features for alerting, querying, and visualization.",
@@ -1332,9 +1332,11 @@ spec:
         severity: warning
       annotations:
         summary: Kubernetes disk pressure (instance {{ $labels.instance }})
-        description: "Node {{ $labels.node }} has disk pressure\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+        description: "Node {{ $labels.node }} has disk pressure
+  VALUE = {{ $value }}
+  LABELS = {{ $labels }}"
       }
-    ],
+    ]`,
     outputs: [
       {
         title: "Alert Notification Example",
@@ -1393,5 +1395,6 @@ Silence: https://alertmanager-main-0.alertmanager-operated:9093/#/silences/new?f
       }
     ]
   }
-};`
-      
+]
+}
+}

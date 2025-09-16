@@ -175,7 +175,7 @@ export const AdvancedTopics = () => {
             data = securityData.rbac;
             break;
           case "Pod Security Standards":
-            data = securityData.podSecurityStandards;
+            data = securityData.podSecurity;
             break;
           case "Network Policies":
             data = securityData.networkPolicies;
