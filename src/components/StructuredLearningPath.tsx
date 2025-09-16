@@ -273,19 +273,37 @@ const sampleCommands = [
   "kubectl describe pod nginx",
   "kubectl apply -f deployment.yaml",
   "kubectl get services",
-  "kubectl logs nginx-pod"
+  "kubectl logs nginx-deployment-1",
+  "kubectl get pods -o wide",
+  "kubectl describe pod my-app-12345",
+  "kubectl logs my-app-12345 -f",
+  "kubectl exec my-app-12345 -- /bin/bash",
+  "kubectl create deployment nginx --image=nginx:1.20",
+  "kubectl scale deployment nginx --replicas=3",
+  "kubectl create service loadbalancer nginx --tcp=80",
+  "kubectl get services -o wide",
+  "kubectl delete pod my-app-12345",
+  "kubectl delete deployment nginx",
+  "kubectl delete service nginx-svc",
+  "kubectl get namespaces",
+  "kubectl top pods -n marketing",
+  "kubectl get events --sort-by='.lastTimestamp'",
+  "kubectl get cs",
+  "kubectl get pods -n kube-system",
+   "kubectl top nodes",
+   "kubectl config current-context"
 ];
-
 const commandOutputs = {
-  "kubectl get pods": `NAME                  READY   STATUS    RESTARTS   AGE
-nginx-deployment-1    1/1     Running   0          2m
-web-app-2             1/1     Running   0          1m
-api-service-3         1/1     Running   0          3m`,
-  "kubectl get nodes": `NAME            STATUS   ROLES           AGE   VERSION
+  "kubectl get pods": `NAME                      READY   STATUS    RESTARTS   AGE
+nginx-deployment-1        1/1     Running   0          2m
+web-app-2                 1/1     Running   0          1m
+api-service-3             1/1     Running   0          3m`,
+  "kubectl get nodes": `NAME            STATUS   ROLES           AGE   VERSION
 control-plane   Ready    control-plane   1d    v1.28.0
 worker-1        Ready    <none>          1d    v1.28.0
 worker-2        Ready    <none>          1d    v1.28.0`,
-  "kubectl get services": `NAME         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
+  "kubectl apply -f deployment.yaml": `deployment.apps/nginx-deployment created`,
+  "kubectl get services": `NAME         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
 kubernetes   ClusterIP   10.96.0.1       <none>        443/TCP   1d
 nginx-svc    ClusterIP   10.96.1.100     <none>        80/TCP    2m`,
   "kubectl describe pod nginx-deployment-1": `Name:         nginx-deployment-1
@@ -315,9 +333,89 @@ Events:
   Normal  Pulled     2m    kubelet            Successfully pulled image "nginx:1.25"
   Normal  Created    2m    kubelet            Created container nginx
   Normal  Started    2m    kubelet            Started container nginx`,
-  "kubectl apply -f deployment.yaml": `deployment.apps/nginx-deployment created`,
-  "kubectl logs nginx-pod": `127.0.0.1 - - [17/Sep/2025:01:48:10 +0600] "GET / HTTP/1.1" 200 612 "-" "curl/7.81.0" "-"
-127.0.0.1 - - [17/Sep/2025:01:48:35 +0600] "GET /index.html HTTP/1.1" 200 612 "-" "Mozilla/5.0" "-"`
+  "kubectl logs nginx-deployment-1": `127.0.0.1 - - [17/Sep/2025:01:48:10 +0600] "GET / HTTP/1.1" 200 612 "-" "curl/7.81.0" "-"
+127.0.0.1 - - [17/Sep/2025:01:48:35 +0600] "GET /index.html HTTP/1.1" 200 612 "-" "Mozilla/5.0" "-"`,
+  "kubectl get pods -o wide": `NAME                     READY   STATUS    RESTARTS   AGE   IP           NODE       NOMINATED NODE   READINESS GATES
+my-app-12345             1/1     Running   0          12m   10.244.1.5   worker-1   <none>           <none>
+nginx-6c6c4d6c9f-jklmn   1/1     Running   0          5m    10.244.2.8   worker-2   <none>           <none>
+nginx-6c6c4d6c9f-pqrst   1/1     Running   0          5m    10.244.1.6   worker-1   <none>           <none>
+nginx-6c6c4d6c9f-uvwxyz   1/1     Running   0          5m    10.244.2.9   worker-2   <none>           <none>`,
+  "kubectl describe pod my-app-12345": `Name:         my-app-12345
+Namespace:    default
+Priority:     0
+Node:         worker-1/192.168.1.101
+Start Time:   Wed, 17 Sep 2025 01:58:10 +0600
+Labels:       app=my-app
+Status:       Running
+IP:           10.244.1.5
+Containers:
+  my-app-container:
+    Image:         my-app:latest
+    Port:          8080/TCP
+    Host Port:     0/TCP
+    State:         Running
+      Started:     Wed, 17 Sep 2025 01:58:12 +0600
+    Ready:         True
+    Restart Count: 0
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  12m   default-scheduler  Successfully assigned default/my-app-12345 to worker-1
+  Normal  Pulled     12m   kubelet            Container image "my-app:latest" already present on machine
+  Normal  Created    12m   kubelet            Created container my-app-container
+  Normal  Started    12m   kubelet            Started container my-app-container`,
+  "kubectl logs my-app-12345 -f": `[INFO] 2025-09-17T02:10:05Z: Application starting...
+[INFO] 2025-09-17T02:10:06Z: Database connection successful.
+[INFO] 2025-09-17T02:10:11Z: Received request for user ID 101.
+[WARN] 2025-09-17T02:10:12Z: User ID 101 has an expired subscription.
+(Note: This command would hang and continue streaming new logs)`,
+  "kubectl exec my-app-12345 -- /bin/bash": `(Note: This command typically opens an interactive shell inside the container. 
+The user's terminal prompt would change, for example:)
+root@my-app-12345:/app#`,
+  "kubectl create deployment nginx --image=nginx:1.20": `deployment.apps/nginx created`,
+  "kubectl scale deployment nginx --replicas=3": `deployment.apps/nginx scaled`,
+    "kubectl create service loadbalancer nginx --tcp=80": `service/nginx created`,
+  "kubectl get services -o wide": `NAME         TYPE           CLUSTER-IP      EXTERNAL-IP      PORT(S)        AGE   SELECTOR
+kubernetes   ClusterIP      10.96.0.1       <none>           443/TCP        2d    <none>
+nginx        LoadBalancer   10.108.15.201   52.140.12.103    80:31189/TCP   5m    app=nginx`,
+  "kubectl delete pod my-app-12345": `pod "my-app-12345" deleted`,
+  "kubectl delete deployment nginx": `deployment.apps "nginx" deleted`,
+  "kubectl delete service nginx-svc": `service "nginx-svc" deleted`,
+  "kubectl get namespaces": `NAME              STATUS   AGE
+default           Active   3d
+kube-node-lease   Active   3d
+kube-public       Active   3d
+kube-system       Active   3d
+marketing         Active   22h
+production        Active   18h`,
+  
+  "kubectl top pods -n marketing": `NAME                              CPU(cores)   MEMORY(bytes)
+promo-engine-7db7b8c8f-4g5h6     105m         128Mi
+promo-engine-7db7b8c8f-9j1k2     110m         135Mi
+user-session-d9b6c7c5-3l4m5     50m          90Mi`,
+    "kubectl get cs": `NAME                 STATUS    MESSAGE   ERROR
+scheduler            Healthy   ok
+controller-manager   Healthy   ok
+etcd-0               Healthy   {"health":"true","reason":""}`,
+  "kubectl top nodes": `NAME            CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%
+control-plane   250m         12%    1210Mi          60%
+worker-1        110m         5%     980Mi           25%
+worker-2        135m         6%     1050Mi          26%`,
+  "kubectl get pods -n kube-system": `NAME                               READY   STATUS    RESTARTS   AGE
+coredns-787d7bdfb4-wgtl5         1/1     Running   0          3d
+etcd-control-plane               1/1     Running   0          3d
+kube-apiserver-control-plane     1/1     Running   0          3d
+kube-controller-mgr-control-plane 1/1    Running   0          3d
+kube-proxy-abcde                 1/1     Running   0          3d
+kube-scheduler-control-plane     1/1     Running   0          3d`,
+  "kubectl config current-context": `minikube`,
+  "kubectl get events --sort-by='.lastTimestamp'": `LAST SEEN   TYPE      REASON              OBJECT                                        MESSAGE
+2m10s       Normal    Scheduled           pod/promo-engine-7db7b8c8f-9j1k2              Successfully assigned marketing/promo-engine-7db7b8c8f-9j1k2 to worker-2
+2m5s        Normal    Pulling             pod/promo-engine-7db7b8c8f-9j1k2              Pulling image "my-registry/promo-engine:v1.2.5"
+1m58s       Normal    Pulled              pod/promo-engine-7db7b8c8f-9j1k2              Successfully pulled image "my-registry/promo-engine:v1.2.5"
+1m57s       Normal    Created             pod/promo-engine-7db7b8c8f-9j1k2              Created container promo-engine-container
+1m56s       Normal    Started             pod/promo-engine-7db7b8c8f-9j1k2              Started container promo-engine-container
+30s         Normal    ScalingReplicaSet   deployment/nginx                              Scaled up replica set nginx-6c6c4d6c9f to 3`
 };
 
 // Troubleshooting guides
@@ -413,7 +511,7 @@ export const StructuredLearningPath = () => {
     
     setTimeout(() => {
       const result = commandOutputs[command as keyof typeof commandOutputs] || 
-        `Command executed: ${command}\nResult: Operation completed successfully`;
+        `${command}: command not found or Unable to execute this command`;
       setOutput(result);
       setIsLoading(false);
     }, 1000);

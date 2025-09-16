@@ -72,14 +72,13 @@ export const InteractivePlayground = () => {
 
   const executeCommand = async () => {
     if (!command.trim()) return;
-    
     setIsLoading(true);
     setHistory(prev => [...prev, command]);
     
     // Simulate command execution
     setTimeout(() => {
       const result = commandOutputs[command as keyof typeof commandOutputs] || 
-        `Command executed: ${command}\nResult: Operation completed successfully`;
+        `${command} command not found or Unable to execute this command`;
       setOutput(result);
       setIsLoading(false);
     }, 1000);
