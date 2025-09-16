@@ -345,8 +345,8 @@ const categoryColors = {
 
 export const StructuredLearningPath = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [activeAdvancedTopics, setActiveAdvancedTopics] = useState<string[]>([]);
-  const [expandedGuides, setExpandedGuides] = useState<string[]>([]);
+  const [activeAdvancedTopics, setActiveAdvancedTopics] = useState<string[]>(advancedTopics.map(topic => topic.id));
+  const [expandedGuides, setExpandedGuides] = useState<string[]>(troubleshootingGuides.map((_, index) => `guide-${index}`));
   const [command, setCommand] = useState("");
   const [output, setOutput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -865,7 +865,6 @@ export const StructuredLearningPath = () => {
                         <CollapsibleContent>
                           <CardContent className="pt-0">
                             <div className="space-y-4">
-                              <h4 className="font-medium">Subtopics</h4>
                               <div className="grid gap-2">
                                 {topic.subtopics.map((subtopic, index) => (
                                   <div 
