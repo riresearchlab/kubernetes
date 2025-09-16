@@ -18,7 +18,7 @@ export const Footer = () => {
           {/* Brand section */}
           <div className="lg:col-span-1 space-y-6">
             <div className="space-y-4">
-              <h3 className="text-2xl font-bold gradient-text">KubeLearn</h3>
+              <h3 className="text-2xl font-bold gradient-text">Kubernetes Bioscope</h3>
               <p className="text-muted-foreground leading-relaxed">
                 The most comprehensive and interactive Kubernetes learning platform. 
                 Master container orchestration with cutting-edge visualizations.
@@ -110,16 +110,7 @@ export const Footer = () => {
               </Button>
             </div>
 
-            <div className="flex items-center gap-6 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <BookOpen className="w-4 h-4" />
-                <span>50+ Lessons</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <MessageCircle className="w-4 h-4" />
-                <span>Community</span>
-              </div>
-            </div>
+
           </div>
         </div>
 
@@ -134,7 +125,7 @@ export const Footer = () => {
           <div className="flex items-center gap-6 text-sm text-muted-foreground">
             <a href="#" className="hover:text-primary transition-colors">Privacy Policy</a>
             <a href="#" className="hover:text-primary transition-colors">Terms of Service</a>
-            <span>© 2024 KubeLearn. All rights reserved.</span>
+            <span>© 2025 Kubernetes Bioscope. All rights reserved.</span>
           </div>
         </div>
       </div>

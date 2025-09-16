@@ -725,7 +725,7 @@ export const StructuredLearningPath = () => {
                           {history.map((cmd, index) => (
                             <div key={index} className="mb-2">
                               <div className="flex items-center gap-2">
-                                <span className="text-tech-green font-mono text-sm">$</span>
+                                <span className="text-tech-green font-mono text-sm">admin@ubuntu:~$</span>
                                 <span className="font-mono text-sm">{cmd}</span>
                               </div>
                             </div>
@@ -740,7 +740,7 @@ export const StructuredLearningPath = () => {
                           )}
                           
                           <div className="flex items-center gap-2">
-                            <span className="text-tech-green font-mono text-sm">$</span>
+                            <span className="text-tech-green font-mono text-sm">admin@ubuntu:~$</span>
                             <Input
                               value={command}
                               onChange={(e) => setCommand(e.target.value)}
@@ -857,10 +857,6 @@ export const StructuredLearningPath = () => {
                                   </div>
                                 ))}
                               </div>
-                              <Button variant="outline" className="w-full">
-                                <Lightbulb className="w-4 h-4 mr-2" />
-                                Start Learning {topic.title}
-                              </Button>
                             </div>
                           </CardContent>
                         </CollapsibleContent>
