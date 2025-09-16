@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { ChevronDown, Box, Server, Network, Database, Shield, Settings, Play, Pause, RotateCcw, Copy, Terminal, BookOpen, Star, Target, FileText, Lightbulb } from "lucide-react";
+import { ChevronDown, Box, Server, Network, Database, Shield, Settings, Play, CircleCheckBig, RefreshCcw, RotateCcw, Copy, Terminal, BookOpen, Star, Target, FileText, Lightbulb } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
@@ -1065,22 +1065,24 @@ export const KubernetesFundamentals = () => {
                             key={index}
                             className={`p-3 rounded border text-center transition-all duration-500 ${
                               demoState === 'running' && index === currentStep 
-                                ? 'bg-primary/20 border-primary scale-105 shadow-lg' 
+                                ? 'bg-yellow-500/20 border-yellow-500 scale-105 shadow-lg' 
                                 : demoState === 'completed' || (demoState === 'running' && index < currentStep)
-                                ? 'bg-tech-green/20 border-tech-green'
-                                : index === 0 ? 'bg-primary/10 border-primary/30' 
-                                : index === 1 ? 'bg-accent/10 border-accent/30'
-                                : 'bg-tech-green/10 border-tech-green/30'
+                                ? 'bg-green-500/20 border-green-500'
+                                : index === 0 ? 'bg-cyan-500/10 border-cyan-500/30'
+                                : index === 1 ? 'bg-primary/10 border-primary/30' 
+                                : index === 2 ? 'bg-accent/10 border-accent/30'
+                                : 'bg-green-500/10 border-green-500/30'
                             }`}
                           >
                             <div className={`w-4 h-4 rounded mx-auto mb-1 transition-all duration-300 ${
                               demoState === 'running' && index === currentStep
-                                ? 'bg-primary animate-pulse'
+                                ? 'bg-yellow-500 animate-pulse'
                                 : demoState === 'completed' || (demoState === 'running' && index < currentStep)
-                                ? 'bg-tech-green'
-                                : index === 0 ? 'bg-primary/50'
-                                : index === 1 ? 'bg-accent/50'
-                                : 'bg-tech-green/50'
+                                ? 'bg-green-500'
+                                : index === 0 ? 'bg-cyan-500/50'
+                                : index === 1 ? 'bg-primary/50'
+                                : index === 2 ? 'bg-accent/50'
+                                : 'bg-green-500/50'
                             }`} />
                             <span className="text-xs font-medium">{step.name}</span>
                           </div>
@@ -1094,7 +1096,9 @@ export const KubernetesFundamentals = () => {
                           onClick={startDemo}
                           disabled={demoState === 'running'}
                         >
-                          <Play className="w-4 h-4 mr-2" />
+                          
+                          
+                          {demoState === 'idle' ? <Play className="w-4 h-4 mr-2" /> : demoState === 'running' ? <RefreshCcw className="w-4 h-4 mr-2" /> : <CircleCheckBig className="w-4 h-4 mr-2" />}
                           {demoState === 'idle' ? 'Start Demo' : demoState === 'running' ? 'Running...' : 'Demo Complete'}
                         </Button>
                         
