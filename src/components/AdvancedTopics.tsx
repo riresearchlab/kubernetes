@@ -4,6 +4,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Network, Database, Shield, Monitor, Package, Zap, Globe, Settings } from "lucide-react";
+import { AdvancedTopicsModal } from "@/components/AdvancedTopicsModal";
+
+// Import data for modals
+import { networkingData } from "@/data/advancedTopics/networkingData";
+import { storageData } from "@/data/advancedTopics/storageData";
+import { securityData } from "@/data/advancedTopics/securityData";
+import { monitoringData } from "@/data/advancedTopics/monitoringData";
 
 const advancedTopics = [
   {
@@ -106,6 +113,10 @@ const difficultyColors = {
 
 export const AdvancedTopics = () => {
   const [activeTopics, setActiveTopics] = useState<string[]>([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [currentTopic, setCurrentTopic] = useState("");
+  const [currentSubtopic, setCurrentSubtopic] = useState("");
+  const [modalData, setModalData] = useState<any>(null);
 
   const toggleTopic = (topicId: string) => {
     setActiveTopics(prev => 
@@ -115,66 +126,177 @@ export const AdvancedTopics = () => {
     );
   };
 
+  const openModal = (topic: string, subtopic: string) => {
+    let data;
+    
+    // Select the appropriate data based on topic and subtopic
+    switch (topic) {
+      case "networking":
+        switch (subtopic) {
+          case "Pod Networking (CNI)":
+            data = networkingData.podNetworking;
+            break;
+          case "Service Types & Load Balancing":
+            data = networkingData.serviceTypes;
+            break;
+          case "Ingress Controllers (Nginx, Traefik)":
+            data = networkingData.ingressControllers;
+            break;
+          case "Network Policies":
+            data = networkingData.networkPolicies;
+            break;
+          case "Service Mesh (Istio, Linkerd)":
+            data = networkingData.serviceMesh;
+            break;
+        }
+        break;
+      case "storage":
+        switch (subtopic) {
+          case "Persistent Volumes (PV)":
+            data = storageData.persistentVolumes;
+            break;
+          case "Persistent Volume Claims (PVC)":
+            data = storageData.persistentVolumeClaims;
+            break;
+          case "Storage Classes":
+            data = storageData.storageClasses;
+            break;
+          case "Dynamic Provisioning":
+            data = storageData.dynamicProvisioning;
+            break;
+          case "StatefulSet Storage":
+            data = storageData.statefulSetStorage;
+            break;
+        }
+        break;
+      case "security":
+        switch (subtopic) {
+          case "Role-Based Access Control (RBAC)":
+            data = securityData.rbac;
+            break;
+          case "Pod Security Standards":
+            data = securityData.podSecurityStandards;
+            break;
+          case "Network Policies":
+            data = securityData.networkPolicies;
+            break;
+          case "Secrets Management":
+            data = securityData.secretsManagement;
+            break;
+          case "Security Scanning":
+            data = securityData.securityScanning;
+            break;
+        }
+        break;
+      case "monitoring":
+        switch (subtopic) {
+          case "Prometheus & Grafana":
+            data = monitoringData.prometheusGrafana;
+            break;
+          case "Centralized Logging":
+            data = monitoringData.centralizedLogging;
+            break;
+          case "Distributed Tracing":
+            data = monitoringData.distributedTracing;
+            break;
+          case "Resource Monitoring":
+            data = monitoringData.resourceMonitoring;
+            break;
+          case "Alert Management":
+            data = monitoringData.alertManagement;
+            break;
+        }
+        break;
+    }
+
+    if (data) {
+      setCurrentTopic(topic);
+      setCurrentSubtopic(subtopic);
+      setModalData(data);
+      setModalOpen(true);
+    }
+  };
+
   return (
     <section className="py-24 relative">
+      {/* Modal component */}
+      {modalData && (
+        <AdvancedTopicsModal
+          open={modalOpen}
+          onOpenChange={setModalOpen}
+          topic={currentTopic}
+          subtopic={currentSubtopic}
+          data={modalData}
+        />
+      )}
+
       <div className="container px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto text-center mb-16">
-          <h2 className="text-3xl lg:text-5xl font-bold mb-6">
-            Advanced{" "}
-            <span className="gradient-text">Kubernetes</span>
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4">
+            Advanced Topics
           </h2>
-          <p className="text-xl text-muted-foreground leading-relaxed">
-            Deep dive into production-ready concepts and enterprise patterns
+          <p className="text-xl text-muted-foreground">
+            Scaling, monitoring, and production practices
           </p>
         </div>
 
-        <Tabs defaultValue="overview" className="max-w-7xl mx-auto">
-          <TabsList className="grid w-full grid-cols-3 h-12 mb-8">
-            <TabsTrigger value="overview">Topic Overview</TabsTrigger>
-            <TabsTrigger value="interactive">Interactive Labs</TabsTrigger>
-            <TabsTrigger value="scenarios">Real-world Scenarios</TabsTrigger>
+        <Tabs defaultValue="overview" className="max-w-5xl mx-auto">
+          <TabsList className="grid w-full grid-cols-3 mb-8">
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="labs">Interactive Labs</TabsTrigger>
+            <TabsTrigger value="scenarios">Scenarios</TabsTrigger>
           </TabsList>
-
-          {/* Overview Tab */}
-          <TabsContent value="overview" className="space-y-6">
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <TabsContent value="overview">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {advancedTopics.map((topic) => (
-                <Card 
-                  key={topic.id} 
-                  className={`group card-gradient border-border/50 hover-lift cursor-pointer transition-all ${
-                    activeTopics.includes(topic.id) ? 'ring-2 ring-primary/50' : ''
-                  }`}
-                  onClick={() => toggleTopic(topic.id)}
-                >
-                  <CardHeader className="pb-4">
-                    <div className="flex items-start justify-between">
-                      <div className={`p-3 rounded-xl bg-gradient-to-r ${topic.color} shadow-glow`}>
-                        <topic.icon className="w-6 h-6 text-white" />
+                <Card key={topic.id} className="overflow-hidden border-none shadow-lg">
+                  <div 
+                    className={`h-2 w-full bg-gradient-to-r ${topic.color}`}
+                  />
+                  <CardHeader className="pb-3">
+                    <div className="flex justify-between items-start">
+                      <div className="flex items-center gap-2">
+                        <div className="p-2 rounded-md bg-muted">
+                          <topic.icon className="h-5 w-5" />
+                        </div>
+                        <CardTitle className="text-xl">{topic.title}</CardTitle>
                       </div>
-                      <Badge className={difficultyColors[topic.difficulty as keyof typeof difficultyColors]}>
+                      <Badge 
+                        variant="outline" 
+                        className={difficultyColors[topic.difficulty as keyof typeof difficultyColors]}
+                      >
                         {topic.difficulty}
                       </Badge>
                     </div>
-                    <CardTitle className="group-hover:gradient-text transition-all">
-                      {topic.title}
-                    </CardTitle>
-                    <p className="text-sm text-muted-foreground">
-                      {topic.description}
-                    </p>
                   </CardHeader>
                   <CardContent>
+                    <p className="text-muted-foreground mb-4">{topic.description}</p>
+                    <Button 
+                      variant="ghost" 
+                      className="w-full justify-between mb-2"
+                      onClick={() => toggleTopic(topic.id)}
+                    >
+                      <span>View subtopics</span>
+                      <span className={`transform transition-transform ${activeTopics.includes(topic.id) ? 'rotate-180' : ''}`}>
+                        ▼
+                      </span>
+                    </Button>
                     {activeTopics.includes(topic.id) && (
-                      <div className="space-y-2 animate-fade-in">
-                        <h4 className="font-medium text-sm mb-3">What you'll learn:</h4>
+                      <div className="mt-4 space-y-2 pl-2 border-l-2 border-muted">
                         {topic.subtopics.map((subtopic, index) => (
                           <div key={index} className="flex items-center gap-2 text-sm">
                             <div className="w-1.5 h-1.5 bg-primary rounded-full" />
-                            <span className="text-muted-foreground">{subtopic}</span>
+                            <span 
+                              className="text-muted-foreground hover:text-primary cursor-pointer"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                openModal(topic.id, subtopic);
+                              }}
+                            >
+                              {subtopic}
+                            </span>
                           </div>
                         ))}
-                        <Button variant="outline" size="sm" className="w-full mt-4">
-                          Start Learning
-                        </Button>
                       </div>
                     )}
                   </CardContent>
@@ -182,132 +304,28 @@ export const AdvancedTopics = () => {
               ))}
             </div>
           </TabsContent>
-
-          {/* Interactive Labs Tab */}
-          <TabsContent value="interactive" className="space-y-6">
-            <div className="grid md:grid-cols-2 gap-6">
-              <Card className="card-gradient border-border/50">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Globe className="w-5 h-5 text-primary" />
-                    Network Policy Builder
-                  </CardTitle>
-                  <p className="text-sm text-muted-foreground">
-                    Visually design and test network policies
-                  </p>
-                </CardHeader>
-                <CardContent>
-                  <div className="terminal p-6 rounded-lg border border-border/30">
-                    <div className="space-y-4">
-                      <div className="grid grid-cols-3 gap-3">
-                        <div className="p-3 bg-primary/10 rounded border text-center">
-                          <div className="w-6 h-6 bg-primary rounded mx-auto mb-2" />
-                          <span className="text-xs">Frontend</span>
-                        </div>
-                        <div className="p-3 bg-accent/10 rounded border text-center">
-                          <div className="w-6 h-6 bg-accent rounded mx-auto mb-2" />
-                          <span className="text-xs">Backend</span>
-                        </div>
-                        <div className="p-3 bg-tech-green/10 rounded border text-center">
-                          <div className="w-6 h-6 bg-tech-green rounded mx-auto mb-2" />
-                          <span className="text-xs">Database</span>
-                        </div>
-                      </div>
-                      <Button variant="outline" className="w-full">
-                        Launch Network Lab
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="card-gradient border-border/50">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Settings className="w-5 h-5 text-primary" />
-                    RBAC Policy Generator
-                  </CardTitle>
-                  <p className="text-sm text-muted-foreground">
-                    Create and test role-based access controls
-                  </p>
-                </CardHeader>
-                <CardContent>
-                  <div className="terminal p-6 rounded-lg border border-border/30">
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm">Cluster Admin</span>
-                        <div className="w-3 h-3 bg-tech-green rounded-full" />
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm">Developer</span>
-                        <div className="w-3 h-3 bg-accent rounded-full" />
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm">Read-only</span>
-                        <div className="w-3 h-3 bg-muted rounded-full" />
-                      </div>
-                      <Button variant="outline" className="w-full mt-4">
-                        Test Permissions
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+          <TabsContent value="labs">
+            <div className="bg-muted/40 rounded-lg p-8 text-center">
+              <h3 className="text-2xl font-bold mb-2">Interactive Labs Coming Soon</h3>
+              <p className="text-muted-foreground mb-6">
+                Hands-on exercises to practice advanced Kubernetes concepts
+              </p>
+              <Button variant="outline">
+                <Globe className="mr-2 h-4 w-4" />
+                Join Waitlist
+              </Button>
             </div>
           </TabsContent>
-
-          {/* Scenarios Tab */}
-          <TabsContent value="scenarios" className="space-y-6">
-            <div className="space-y-4">
-              {[
-                {
-                  title: "High Availability Setup",
-                  description: "Configure a production-ready multi-master cluster",
-                  difficulty: "Advanced",
-                  estimatedTime: "45 minutes"
-                },
-                {
-                  title: "Zero-Downtime Deployment",
-                  description: "Implement rolling updates with health checks",
-                  difficulty: "Intermediate",
-                  estimatedTime: "30 minutes"
-                },
-                {
-                  title: "Security Hardening",
-                  description: "Apply security best practices and policies",
-                  difficulty: "Advanced",
-                  estimatedTime: "60 minutes"
-                },
-                {
-                  title: "Monitoring Setup",
-                  description: "Deploy complete monitoring stack with alerting",
-                  difficulty: "Intermediate",
-                  estimatedTime: "40 minutes"
-                }
-              ].map((scenario, index) => (
-                <Card key={index} className="card-gradient border-border/50 hover-lift cursor-pointer">
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <h3 className="text-lg font-semibold">{scenario.title}</h3>
-                          <Badge className={difficultyColors[scenario.difficulty as keyof typeof difficultyColors]}>
-                            {scenario.difficulty}
-                          </Badge>
-                        </div>
-                        <p className="text-sm text-muted-foreground mb-3">{scenario.description}</p>
-                        <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                          <span>⏱️ {scenario.estimatedTime}</span>
-                          <span>🎯 Hands-on Lab</span>
-                        </div>
-                      </div>
-                      <Button variant="outline">
-                        Start Scenario
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+          <TabsContent value="scenarios">
+            <div className="bg-muted/40 rounded-lg p-8 text-center">
+              <h3 className="text-2xl font-bold mb-2">Real-world Scenarios</h3>
+              <p className="text-muted-foreground mb-6">
+                Production-ready examples and case studies
+              </p>
+              <Button variant="outline">
+                <Settings className="mr-2 h-4 w-4" />
+                Explore Scenarios
+              </Button>
             </div>
           </TabsContent>
         </Tabs>
