@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -8,6 +8,7 @@ import {
   BookOpen, 
   Settings, 
   Terminal, 
+  Activity,
   Layers, 
   Zap,
   Shield,
@@ -471,20 +472,36 @@ const categoryColors = {
   "Inspect Resources": "bg-primary/20 text-primary"
 };
 
+interface HistoryItem {
+  command: string;
+  output: string;
+}
+
 export const StructuredLearningPath = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeAdvancedTopics, setActiveAdvancedTopics] = useState<string[]>(advancedTopics.map(topic => topic.id));
   const [expandedGuides, setExpandedGuides] = useState<string[]>(troubleshootingGuides.map((_, index) => `guide-${index}`));
   const [command, setCommand] = useState("");
-  const [output, setOutput] = useState("");
+  const [history, setHistory] = useState<HistoryItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [history, setHistory] = useState<string[]>([]);
+  const terminalOutputRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   
   // Add modal state
   const [modalOpen, setModalOpen] = useState(false);
   const [currentTopic, setCurrentTopic] = useState("");
   const [currentSubtopic, setCurrentSubtopic] = useState("");
   const [modalData, setModalData] = useState<any>(null);
+
+  useEffect(() => {
+    if (terminalOutputRef.current) {
+      terminalOutputRef.current.scrollTop = terminalOutputRef.current.scrollHeight;
+    }
+  }, [history, isLoading]);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
 
   const toggleAdvancedTopic = (topicId: string) => {
     setActiveAdvancedTopics(prev => 
@@ -503,28 +520,41 @@ export const StructuredLearningPath = () => {
     );
   };
 
-  const executeCommand = async () => {
-    if (!command.trim()) return;
-    
+  const executeCommand = async (cmdToExecute: string) => {
+    if (!cmdToExecute.trim() || isLoading) return;
+
     setIsLoading(true);
-    setHistory(prev => [...prev, command]);
+    setCommand("");
     
+    const newHistoryItem: HistoryItem = {
+      command: cmdToExecute,
+      output: "Executing command...",
+    };
+    setHistory(prev => [...prev, newHistoryItem]);
+
     setTimeout(() => {
-      const result = commandOutputs[command as keyof typeof commandOutputs] || 
-        `${command}: command not found or Unable to execute this command`;
-      setOutput(result);
+      const result = commandOutputs[cmdToExecute as keyof typeof commandOutputs] || 
+        `Error: command not found: ${cmdToExecute}`;
+      
+      setHistory(prev => prev.map((item, index) => 
+        index === prev.length - 1 ? { ...item, output: result } : item
+      ));
       setIsLoading(false);
+      inputRef.current?.focus();
     }, 1000);
   };
 
-  const clearTerminal = () => {
-    setOutput("");
-    setCommand("");
-    setHistory([]);
+  const handleCommandSubmit = () => {
+    executeCommand(command);
   };
 
-  const copyCommand = (cmd: string) => {
-    navigator.clipboard.writeText(cmd);
+  const handleQuickCommand = (cmd: string) => {
+    executeCommand(cmd);
+  };
+
+  const clearTerminal = () => {
+    setHistory([]);
+    setCommand("");
   };
 
   const openModal = (topic: string, subtopic: string) => {
@@ -776,7 +806,6 @@ export const StructuredLearningPath = () => {
                 kubectl Command Mastery
               </h3>
               <p className="text-lg text-muted-foreground">Become proficient with the Kubernetes CLI</p>
-              {/* Removed difficulty badge and duration display */}
             </div>
             
             <Card className="card-gradient border-border/50">
@@ -816,18 +845,6 @@ export const StructuredLearningPath = () => {
                                   </div>
                                   <p className="text-muted-foreground mb-3">{cmd.description}</p>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                  <Button 
-                                    variant="outline" 
-                                    size="sm"
-                                    onClick={() => copyCommand(cmd.command)}
-                                  >
-                                    <Copy className="w-4 h-4" />
-                                  </Button>
-                                  <Button variant="outline" size="sm">
-                                    <Play className="w-4 h-4" />
-                                  </Button>
-                                </div>
                               </div>
                               
                               <div className="grid md:grid-cols-2 gap-4">
@@ -851,100 +868,116 @@ export const StructuredLearningPath = () => {
                     </div>
                   ))}
                 </div>
+              </CardContent>
+            </Card>
 
-                <div className="space-y-4">
-                  <h4 className="text-lg font-semibold">Interactive Terminal</h4>
-                  <Card className="card-gradient border-border/50">
-                    <CardContent className="p-6">
-                      <div className="space-y-4">
-                        <div className="terminal p-6 rounded-lg border border-border/30 min-h-[400px]">
-                          <div className="flex items-center gap-2 mb-4">
-                            <div className="flex gap-2">
-                              <div className="w-3 h-3 bg-red-500 rounded-full" />
-                              <div className="w-3 h-3 bg-yellow-500 rounded-full" />
-                              <div className="w-3 h-3 bg-green-500 rounded-full" />
-                            </div>
-                            <span className="text-2xl font-bold text-white">kubectl-terminal</span>
+            <Card>
+              <CardContent>
+
+              <div className="space-y-6 mt-12">
+                <div className="text-center">
+                  <h3 className="text-2xl font-bold mb-4 flex items-center justify-center gap-3">
+                    <div className="p-2 bg-gradient-primary rounded-lg">
+                      <Activity className="w-6 h-6 text-white" />
+                    </div>
+                    Visualize kubectl Commands
+                  </h3>
+                  <p className="text-lg text-muted-foreground">Master Your Cluster with Visual Feedback</p>
+                </div>
+              </div>
+
+                <div className="space-y-6 mt-4">
+                    <h5 className="font-medium">Quick Commands</h5>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                        {sampleCommands.map((cmd, index) => (
+                          <Button
+                            key={index}
+                            variant="outline"
+                            size="sm"
+                            className="font-mono text-xs justify-start"
+                            onClick={() => executeCommand(cmd)}
+                          >
+                            {cmd}
+                          </Button>
+                        ))}
+                      </div>
+                </div>
+
+                <div className="space-y-6 mt-4">
+                  <div className="bg-slate-900 rounded-lg border border-border/50 shadow-xl">
+                    {/* Terminal Header */}
+                    <div className="flex items-center justify-between p-3 border-b border-slate-700 bg-slate-800 rounded-t-lg">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-red-500 rounded-full" />
+                        <div className="w-3 h-3 bg-yellow-500 rounded-full" />
+                        <div className="w-3 h-3 bg-green-500 rounded-full" />
+                        <span className="ml-2 text-sm text-slate-300 font-medium">kubectl-terminal</span>
+                      </div>
+                      <Button 
+                        size="sm" 
+                        variant="ghost" 
+                        onClick={clearTerminal}
+                        className="text-slate-300 hover:text-white hover:bg-slate-700 text-xs px-3 py-1 h-auto w-[111px]"
+                      >
+                        Clear
+                      </Button>
+                    </div>
+                    
+                    {/* Terminal Content */}
+                    <div 
+                      ref={terminalOutputRef}
+                      className="p-4 h-[400px] bg-slate-900 rounded-b-lg font-mono text-sm overflow-y-auto"
+                      onClick={() => inputRef.current?.focus()}
+                    >
+                      {history.map((item, index) => (
+                        <div key={index} className="mb-2">
+                          <div className="flex items-center gap-2">
+                            <span className="text-cyan-400">admin@ubuntu:~$</span>
+                            <span className="text-white">{item.command}</span>
                           </div>
-                          
-                          {history.map((cmd, index) => (
-                            <div key={index} className="mb-2">
-                              <div className="flex items-center gap-2">
-                                <span className="text-tech-green font-mono text-sm">admin@ubuntu:~$</span>
-                                <span className="font-mono text-sm">{cmd}</span>
-                              </div>
+                          {item.output === "Executing command..." && isLoading && index === history.length - 1 ? (
+                            <div className="flex items-center gap-2 text-yellow-400 mt-1">
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                                <span>{item.output}</span>
                             </div>
-                          ))}
-                          
-                          {output && (
-                            <div className="mb-4 p-3 bg-muted/20 rounded border border-muted/30">
-                              <pre className="text-xs text-muted-foreground whitespace-pre-wrap">
-                                {output}
-                              </pre>
+                          ) : (
+                            <div className="mt-1 text-green-400 whitespace-pre-wrap">
+                                {item.output}
                             </div>
                           )}
-                          
-                          <div className="flex items-center gap-2">
-                            <span className="text-tech-green font-mono text-sm">admin@ubuntu:~$</span>
-                            <Input
-                              value={command}
-                              onChange={(e) => setCommand(e.target.value)}
-                              placeholder="Type kubectl command here..."
-                              className="flex-1 bg-transparent border-none focus:ring-0 font-mono text-sm"
-                              onKeyPress={(e) => {
-                                if (e.key === 'Enter') {
-                                  executeCommand();
-                                }
-                              }}
-                            />
-                            {isLoading && <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />}
-                          </div>
                         </div>
-                        
-                        <div className="space-y-3">
-                          <h5 className="font-medium">Quick Commands</h5>
-                          <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                            {sampleCommands.map((cmd, index) => (
-                              <Button
-                                key={index}
-                                variant="outline"
-                                size="sm"
-                                className="font-mono text-xs justify-start"
-                                onClick={() => setCommand(cmd)}
-                              >
-                                {cmd}
-                              </Button>
-                            ))}
-                          </div>
-                        </div>
-                        
-                        <div className="flex gap-2">
-                          <Button 
-                            onClick={executeCommand} 
-                            disabled={!command.trim() || isLoading}
-                            className="flex-1"
-                          >
-                            {isLoading ? (
-                              <>
-                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                Executing...
-                              </>
-                            ) : (
-                              <>
-                                <Play className="w-4 h-4 mr-2" />
-                                Execute Command
-                              </>
-                            )}
-                          </Button>
-                          <Button variant="outline" onClick={clearTerminal}>
-                            <RotateCcw className="w-4 h-4 mr-2" />
-                            Clear
-                          </Button>
+                      ))}
+                      
+                      {/* Current command line */}
+                      <div className="flex items-center gap-2">
+                        <span className="text-cyan-400">admin@ubuntu:~$</span>
+                        <div className="flex-1 relative">
+                          <input
+                            ref={inputRef}
+                            type="text"
+                            value={command}
+                            onChange={(e) => setCommand(e.target.value)}
+                            placeholder=""
+                            className="bg-transparent text-white outline-none border-none w-full font-mono"
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                handleCommandSubmit();
+                              }
+                            }}
+                            disabled={isLoading}
+                            autoFocus
+                          />
+                          {!isLoading && (
+                            <span className="absolute top-0 left-0 w-2 h-5 bg-white animate-pulse" style={{
+                                left: `${command.length * 0.6}rem`
+                            }} />
+                          )}
                         </div>
                       </div>
-                    </CardContent>
-                  </Card>
-                </div>
+
+                    </div>
+                  </div>
+                  </div>
               </CardContent>
             </Card>
           </div>
