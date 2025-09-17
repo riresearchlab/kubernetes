@@ -1,32 +1,68 @@
 <!doctype html>
 <html lang="en">
   <head>
+        <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EFFVVGY61G"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-EFFVVGY61G');
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- SEO Meta Tags -->
     <title>Kubernetes Bioscope</title>
     <meta name="description" content="The ultimate Kubernetes learning platform with 3D visualizations, interactive tutorials, and hands-on practice environments. Master container orchestration from basics to advanced." />
+    <meta name="keywords" content="Kubernetes, learning, 3D, interactive, platform, tutorial, DevOps, cloud-native, container orchestration, K8s, Kubernetes Tutorial, Kubernetes cheatsheet, Kubernetes commands, Kubernetes tutorial, Kubernetes cheatsheet, Kubernetes commands, Kubernetes learning platform, Kubernetes branching visualization, Kubernetes visualization, Kubernetes, Kuberneteshub, KubernetesHUB, Kubernetes, Kubernetes Learning Platform, Kubernetes Visualization Platform, K8s, K8s cheatsheet, K8s tutorial, K8s learning, kubectl commands, kubectl tutorial, kubectl learning, kubernetes command visualization, k8s simulator, K8s orchestration" />
     <meta name="author" content="Kubernetes Bioscope" />
-    <meta name="keywords" content="Kubernetes, Docker, Container Orchestration, DevOps, Cloud Native, kubectl, Learning Platform" />
+    <meta name="google-site-verification" content="fQcYgxpYT3mn1m7TbDbARlmRsTeoqnK2MoUenl5VtvY" />
+    <link rel="canonical" href="https://kubernetes-bioscope.netlify.app/" />
 
-    <meta property="og:title" content="Kubernetes Bioscope - Interactive Kubernetes Learning Platform" />
-    <meta property="og:description" content="Master Kubernetes with cutting-edge visualizations, interactive tutorials, and real-world scenarios. The most comprehensive container orchestration course." />
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Kubernetes Bioscope: Interactive 3D Learning Platform" />
+    <meta property="og:description" content="Kubernetes Tutorial, Kubernetes cheatsheet, Kubernetes commands, Kubernetes tutorial, Kubernetes cheatsheet, Kubernetes commands, Kubernetes learning platform, Kubernetes branching visualization, Kubernetes visualization, Kubernetes, kubectl visualiztion, clustering tutorial, k8s tutorial, k8s visualization, k8s learning platform, k8s cheatseet, kubectl cheatsheet, Kubectl learning, Kubernetes, Kubernetes Learning Platform, Kubernetes Visualization Platform, Master Kubernetes with our interactive 3D learning platform, featuring visualizations, hands-on labs, and expert-led tutorials." />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-    <link rel="icon" href="/favicon.ico" />
-    <link rel="apple-touch-icon" href="/favicon.ico" />
+    <meta property="og:url" content="https://kubernetes-bioscope.netlify.app/" />
+
+    <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@lovable_dev" />
     <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <meta name="twitter:title" content="Kubernetes Bioscope: Interactive 3D Learning Platform" />
+    <meta name="twitter:description" content="Master Kubernetes with our interactive 3D learning platform, featuring visualizations, hands-on labs, and expert-led tutorials." />
+
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/favicon.ico" />
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
      
-    <!-- GitHub Pages SPA redirect script -->
+    <!-- Structured Data (Schema.org) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "url": "https://kubernetes-bioscope.netlify.app/",
+      "name": "Kubernetes Bioscope",
+      "description": "Master Kubernetes with our interactive 3D learning platform. Explore complex concepts through visualization, hands-on labs, and expert-led tutorials. Start your cloud-native journey today.",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://kubernetes-bioscope.netlify.app/search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+
+    <!-- KubernetesHub Pages SPA redirect script -->
     <script type="text/javascript">
-      // Single Page Apps for GitHub Pages
-      // Start single page app as soon as possible so the page loads faster
+      // Single Page Apps for KubernetesHub Pages
       (function(l) {
         if (l.search[1] === '/' ) {
           var decoded = l.search.slice(1).split('&').map(function(s) { 
@@ -41,6 +77,15 @@
   </head>
 
   <body>
+    <!-- 
+      SEO Best Practices for SPA:
+      - Heading Hierarchy (H1-H6): Implemented within React components (e.g., Hero.tsx, KubernetesFundamentals.tsx) 
+        to ensure semantic structure.
+      - Image Alt Attributes: Descriptive alt text is added to all images within their respective React components 
+        to improve accessibility and SEO.
+      - Page Load Speed: Vite handles automatic minification of CSS/JS for production builds. Images should be compressed
+        manually before being added to the project.
+    -->
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
